@@ -3,8 +3,7 @@ import java.util.List;
 import java.util.Set;
 
 public class Epic  extends Task{
-    // список подзадач эпика
-    Set<Integer> subTasks;
+    private Set<Integer> subTasks;
 
     public Epic(String name, String description) {
         super(name, description);

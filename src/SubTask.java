@@ -1,7 +1,4 @@
 public class SubTask extends Task{
-    // конечный статус эпика
-    private static final TaskStatus END_EPIC_STATUS = TaskStatus.DONE;
-    // ссылка на идентификатор эпика
     private Integer epic;
 
     public SubTask(String name, String description, Integer epic) {
@@ -9,7 +6,7 @@ public class SubTask extends Task{
         this.epic = epic;
     }
 
-    /*TODO: Конструктор для тестирования обновления*/
+    /*Конструктор для тестирования обновления через создание нового объекта с тем же id*/
     public SubTask(Integer id, String name, String description, TaskStatus status, Integer epic) {
         super(id, name, description, status);
         this.epic = epic;

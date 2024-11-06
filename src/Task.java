@@ -10,7 +10,7 @@ public class Task {
         this.status = TaskStatus.NEW;
     }
 
-    /*TODO: Конструктор для тестирования обновления*/
+    /*Конструктор для тестирования обновления через создание нового объекта с тем же id*/
     public Task(int id, String name,  String description, TaskStatus status) {
         this.id = id;
         this.name = name;
@@ -29,11 +29,6 @@ public class Task {
     public TaskStatus getStatus() {
         return status;
     }
-
-    /*TODO: функция для тестирования смены статуса*/
-    /*public void setStatus(TaskStatus status) {
-        this.status = status;
-    }*/
 
     public String getName() {
         return name;
