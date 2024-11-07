@@ -22,19 +22,14 @@ public class Epic  extends Task{
                 '}';
     }
 
-
-    /* Добавление подзадачи в эпик*/
     public void addSubTask(Integer subTaskId) {
-        // добавляем в список подзадачу
         subTasks.add(subTaskId);
     }
 
-    /*Удаление подзадачи по Id*/
     public void deleteSubTaskById(Integer subTaskId) {
         subTasks.remove(subTaskId);
     }
 
-    /*Удаление всех подзадач*/
     public void deleteSubTaskAll() {
         subTasks.clear();
     }
@@ -43,7 +38,6 @@ public class Epic  extends Task{
         return subTasks;
     }
 
-    /*TODO: Обновляем статус по переданному массиву объектов, т.к. из массива ссылок выйти на объект нет возможности*/
     public void updateStatus(List<SubTask> subTasks) {
         int countDone = 0, countNew = 0;
         TaskStatus tempStatus = TaskStatus.IN_PROGRESS;

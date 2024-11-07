@@ -45,6 +45,18 @@ public class Main {
         st = new SubTask(5, "подзадача 5","обновление подзадачи 5 эпика 3", TaskStatus.DONE, epicNum);
         tm.updateSubTask(st);
 
+        System.out.println("Удаляем с отсутствующим Id");
+        tm.deleteById(10);
+
+        System.out.println("Удаляем задачу с Id = 1");
+        tm.deleteById(1);
+
+        System.out.println("Удаляем подзадача с Id = 4");
+        tm.deleteById(4);
+
+        System.out.println("Удаляем эпик с Id = 3");
+        tm.deleteById(3);
+
         System.out.println(tm.toString());
     }
 }
