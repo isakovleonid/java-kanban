@@ -1,135 +1,42 @@
 import java.util.*;
 
-public class TaskManager {
-    private int counter;
-
-    Map<Integer, Task> tasks;
-    Map<Integer, SubTask> subTasks;
-    Map<Integer, Epic> epics;
-
-    public TaskManager() {
-        counter = 0;
-        tasks = new HashMap<>();
-        epics = new HashMap<>();
-        subTasks = new HashMap<>();
-    }
-
+public interface TaskManager {
     /* 1. Получение списка всех задач */
     @Override
-    public String toString() {
-        return "TaskManager{" +
-                "tasks=" + tasks.toString() + '\'' +
-                ", epics=" + epics.toString() + '\'' +
-                ", subTasks=" + subTasks.toString() + '\'' +
-                '}';
-    }
+    public String toString();
 
     /* 2. Удаление всех задач */
-    public void deleteAll() {
-        tasks.clear();
-    }
+    public void deleteAll() ;
 
     /* 3. Получение объекта по идентификатору */
-    public Task getById(int id) {
-        Task task;
-        task = tasks.get(id);
+    public Task getById(int id);
 
-        if (task != null)
-                return task;
-
-        SubTask subTask;
-        subTask = subTasks.get(id);
-
-        if (subTask != null)
-            return subTask;
-
-        Epic epic;
-        epic = epics.get(id);
-
-        if (epic != null)
-            return epic;
-
-        return null;
-    }
+    public Task getTask(int id) ;
+    public SubTask getSubTask(int id) ;
+    public Epic getEpic(int id) ;
 
     /* 4. Создание */
-    public void addTask(Task newTask) {
-        newTask.setId(++counter);
-        updateTask(newTask);
-    }
+    public int addTask(Task newTask) ;
 
-    public void addEpic(Epic newEpic) {
-        newEpic.setId(++counter);
-        updateEpic(newEpic);
-    }
+    public int addEpic(Epic newEpic);
 
-    public void addSubTask(SubTask newSubTask) {
-        newSubTask.setId(++counter);
-        updateSubTask(newSubTask);
-    }
+    public int addSubTask(SubTask newSubTask) ;
 
     /* 5. Обновление */
-    public void updateTask(Task newTask){
-        tasks.put(newTask.getId(), newTask);
-    }
+    public void updateTask(Task newTask);
 
-    public void updateEpic(Epic newEpic){
-        epics.put(newEpic.getId(), newEpic);
-    }
+    public void updateEpic(Epic newEpic);
 
     /*Обновление подзадачи*/
-    public void updateSubTask(SubTask newSubTask){
-        Integer subTaskId = newSubTask.getId();
-        subTasks.put(subTaskId, newSubTask);
-
-        Integer epicId = newSubTask.getEpic();
-        Epic epic = epics.get(epicId);
-        epic.addSubTask(subTaskId);
-
-        updateEpicStatus(epicId);
-    }
-
-    /* Обновление статуса эпика после обновления подзадач*/
-    private void updateEpicStatus(Integer epicId) {
-        Epic epic = epics.get(epicId);
-
-        List<SubTask> subTaskList = getEpicSubTasks(epic);
-        epic.updateStatus(subTaskList);
-    }
+    public void updateSubTask(SubTask newSubTask);
 
     /* 6. Удаление по идентификатору */
-    public void deleteById(int id) {
-        tasks.remove(id);
-
-        SubTask subTask = subTasks.get(id);
-        if (subTask != null) {
-            Integer epicId = subTask.getEpic();
-            Epic epic = epics.get(epicId);
-            epic.deleteSubTaskById(id);
-            updateEpicStatus(epicId);
-            subTasks.remove(id);
-        }
-
-        Epic epic = epics.get(id);
-        if (epic != null) {
-            for (Integer subTaskId : epic.getSubTasks()) {
-                subTasks.remove(subTaskId);
-            }
-            epic.deleteSubTaskAll();
-            epics.remove(id);
-        }
-    }
+    public void deleteById(int id);
 
     /* 7. Получение списка всех подзадач определенного эпика*/
-    public  List<SubTask> getEpicSubTasks(Epic epic) {
-        List<SubTask> subTaskList = new ArrayList<>();
-        for (Integer subTaskId : epic.getSubTasks()) {
-            subTaskList.add(subTasks.get(subTaskId));
-        }
+    public  List<SubTask> getEpicSubTasks(Epic epic);
 
-        return subTaskList;
-    }
-
-
+    /* 8. Список просмотров последних задач*/
+    public List<Task> getHistory();
 
 }

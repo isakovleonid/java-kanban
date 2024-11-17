@@ -7,9 +7,9 @@ public class SubTask extends Task{
     }
 
     /*Конструктор для тестирования обновления через создание нового объекта с тем же id*/
-    public SubTask(Integer id, String name, String description, TaskStatus status, Integer epic) {
+    public SubTask(Integer id, String name, String description, TaskStatus status, Epic epic) {
         super(id, name, description, status);
-        this.epic = epic;
+        this.epic = epic.getId();
     }
 
     public Integer getEpic() {
