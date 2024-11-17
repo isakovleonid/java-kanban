@@ -9,11 +9,11 @@ public interface TaskManager {
     public void deleteAll() ;
 
     /* 3. Получение объекта по идентификатору */
-    public Task getById(int id);
+    public Task getById(int id, HistoryManager historyManager);
 
-    public Task getTask(int id) ;
-    public SubTask getSubTask(int id) ;
-    public Epic getEpic(int id) ;
+    public Task getTask(int id, HistoryManager historyManager) ;
+    public SubTask getSubTask(int id, HistoryManager historyManager) ;
+    public Epic getEpic(int id, HistoryManager historyManager) ;
 
     /* 4. Создание */
     public int addTask(Task newTask) ;
@@ -35,8 +35,4 @@ public interface TaskManager {
 
     /* 7. Получение списка всех подзадач определенного эпика*/
     public  List<SubTask> getEpicSubTasks(Epic epic);
-
-    /* 8. Список просмотров последних задач*/
-    public List<Task> getHistory();
-
-}
+    }

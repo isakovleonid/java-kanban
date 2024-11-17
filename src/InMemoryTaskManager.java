@@ -7,14 +7,12 @@ public class InMemoryTaskManager implements TaskManager{
     Map<Integer, SubTask> subTasks;
     Map<Integer, Epic> epics;
 
-    HistoryManager historyManager;
 
     public InMemoryTaskManager() {
         counter = 0;
         tasks = new HashMap<>();
         epics = new HashMap<>();
         subTasks = new HashMap<>();
-        historyManager = new InMemoryHistoryManager();
     }
 
     /* 1. Получение списка всех задач */
@@ -35,21 +33,21 @@ public class InMemoryTaskManager implements TaskManager{
 
     /* 3. Получение объекта по идентификатору */
     @Override
-    public Task getById(int id) {
+    public Task getById(int id, HistoryManager historyManager) {
         Task task;
-        task = getTask(id);
+        task = getTask(id, historyManager);
 
         if (task != null)
                 return task;
 
         SubTask subTask;
-        subTask = getSubTask(id);
+        subTask = getSubTask(id, historyManager);
 
         if (subTask != null)
             return subTask;
 
         Epic epic;
-        epic = getEpic(id);
+        epic = getEpic(id, historyManager);
 
         if (epic != null)
             return epic;
@@ -58,7 +56,7 @@ public class InMemoryTaskManager implements TaskManager{
     }
 
     @Override
-    public Task getTask(int id) {
+    public Task getTask(int id, HistoryManager historyManager) {
         Task task;
         task = tasks.get(id);
 
@@ -69,7 +67,7 @@ public class InMemoryTaskManager implements TaskManager{
     }
 
     @Override
-    public SubTask getSubTask(int id) {
+    public SubTask getSubTask(int id, HistoryManager historyManager) {
         SubTask subTask;
         subTask = subTasks.get(id);
 
@@ -80,7 +78,7 @@ public class InMemoryTaskManager implements TaskManager{
     }
 
     @Override
-    public Epic getEpic(int id) {
+    public Epic getEpic(int id, HistoryManager historyManager) {
         Epic epic;
         epic = epics.get(id);
 
@@ -90,10 +88,10 @@ public class InMemoryTaskManager implements TaskManager{
         return epic;
     }
 
-    @Override
+    /*@Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
-    }
+    }*/
 
     /* 4. Создание */
     @Override

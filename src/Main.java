@@ -3,7 +3,8 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Поехали!");
 
-        TaskManager tm = new InMemoryTaskManager();
+        TaskManager tm = Managers.getDefault();
+        HistoryManager historyManager = Managers.getDefaultHistory();
 
         /* Создание Task*/
         Task t1 = new Task("задача 1", "описание задачи 1");
@@ -50,16 +51,16 @@ public class Main {
         System.out.println(tm.toString());
 
         System.out.println("Чтение задачи 1");
-        tm.getTask(t1_id);
+        tm.getTask(t1_id, historyManager);
         System.out.println("Чтение задачи 2");
-        tm.getTask(t2_id);
+        tm.getTask(t2_id, historyManager);
         System.out.println("Чтение подзадачи 4");
-        tm.getSubTask(st1_id);
+        tm.getSubTask(st1_id, historyManager);
         System.out.println("Чтение эпика 3");
-        tm.getEpic(epic_id);
+        tm.getEpic(epic_id, historyManager);
         System.out.println("Чтение подзадачи 4");
-        tm.getSubTask(st1_id);
+        tm.getSubTask(st1_id, historyManager);
 
-        System.out.println("История чтения: " + tm.getHistory());
+        System.out.println("История чтения: " + historyManager.getHistory());
     }
 }

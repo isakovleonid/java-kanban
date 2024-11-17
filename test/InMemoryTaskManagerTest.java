@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskManagerTest {
     static TaskManager tm;
+    static HistoryManager historyManager;
     static int t1_id;
     static int t2_id;
     static int e_id;
@@ -15,7 +16,8 @@ class InMemoryTaskManagerTest {
 
     @BeforeAll
     static void beforeAll() {
-        tm = new InMemoryTaskManager();
+        tm = Managers.getDefault();
+        historyManager = Managers.getDefaultHistory();
 
         Task t1 = new Task("задача 1", "описание задачи 1");
         t1_id = tm.addTask(t1);
@@ -36,22 +38,22 @@ class InMemoryTaskManagerTest {
 
     @Test
     void taskAreEqualsById() {
-        Task t1 = tm.getTask(1);
+        Task t1 = tm.getTask(1, historyManager);
         Task tt = new Task(1,"test", "test", TaskStatus.NEW);
-        Task t2 = tm.getTask(2);
+        Task t2 = tm.getTask(2, historyManager);
 
         assertEquals(t1, tt, "Задачи не равны при одинаковом id");
         assertNotEquals(t1, t2, "Задачи равны при разных id");
     }
 
     void taskManagerTest() {
-        Task test_t1 = tm.getTask(t1_id);
+        Task test_t1 = tm.getTask(t1_id, historyManager);
         assertNotNull(test_t1,"Не найдена задача с индексом " + t1_id);
 
-        SubTask test_st1 = tm.getSubTask(st1_id);
+        SubTask test_st1 = tm.getSubTask(st1_id, historyManager);
         assertNotNull(test_t1,"Не найдена подзадача с индексом " + st1_id);
 
-        Epic test_epic = tm.getEpic(e_id);
+        Epic test_epic = tm.getEpic(e_id, historyManager);
         assertNotNull(test_t1,"Не найден эпик с индексом " + e_id);
     }
 
