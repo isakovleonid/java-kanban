@@ -10,7 +10,8 @@ class InMemoryTaskManagerTest {
     static HistoryManager historyManager;
     static int t1_id;
     static int t2_id;
-    static int e_id;
+    static int e1_id;
+    static int e2_id;
     static int st1_id;
     static int st2_id;
 
@@ -26,25 +27,44 @@ class InMemoryTaskManagerTest {
         t1 = new Task("задача 2", "описание задачи 2");
         t2_id = tm.addTask(t1);
 
-        Epic epic = new Epic("эпик 1", "описание эпика 1");
-        e_id = tm.addEpic(epic);
+        Epic e1 = new Epic("эпик 1", "описание эпика 1");
+        e1_id = tm.addEpic(e1);
 
-        SubTask st = new SubTask("подзадача 4", "описание подзадачи 4 эпика 3", e_id);
+        Epic e2= new Epic("эпик 2", "описание эпика 2");
+        e2_id = tm.addEpic(e2);
+
+        SubTask st = new SubTask("подзадача 4", "описание подзадачи 4 эпика 3", e1_id);
         st1_id = tm.addSubTask(st);
 
-        st = new SubTask("подзадача 5", "описание подзадачи 5 эпика 3", e_id);
+        st = new SubTask("подзадача 5", "описание подзадачи 5 эпика 3", e1_id);
         st2_id = tm.addSubTask(st);
     }
 
 
     @Test
     void taskAreEqualsById() {
-        Task t1 = tm.getTask(1, historyManager);
-        Task tt = new Task(1,"test", "test", TaskStatus.NEW);
-        Task t2 = tm.getTask(2, historyManager);
+        Task t1 = tm.getTask(t1_id, historyManager);
+        Task tt = new Task(t1_id,"test", "test", TaskStatus.NEW);
+        Task t2 = tm.getTask(t2_id, historyManager);
 
         assertEquals(t1, tt, "Задачи не равны при одинаковом id");
         assertNotEquals(t1, t2, "Задачи равны при разных id");
+
+        Epic e1 = tm.getEpic(e1_id, historyManager);
+        Epic et = new Epic(e1_id, "test", "test");
+        Epic e2 = tm.getEpic(e2_id, historyManager);
+
+        assertEquals(e1, et, "Задачи не равны при одинаковом id");
+        assertNotEquals(e1, e2, "Задачи равны при разных id");
+
+        SubTask st1 = tm.getSubTask(st1_id, historyManager);
+        SubTask stt = new SubTask(st1_id,"test", "test", TaskStatus.NEW, e1);
+        SubTask st2 = tm.getSubTask(st2_id, historyManager);
+
+        assertEquals(st1, stt, "Подзадачи не равны при одинаковом id");
+        assertNotEquals(st1, st2, "Подзадачи равны при разных id");
+
+
     }
 
     void taskManagerTest() {
@@ -54,8 +74,8 @@ class InMemoryTaskManagerTest {
         SubTask test_st1 = tm.getSubTask(st1_id, historyManager);
         assertNotNull(test_t1,"Не найдена подзадача с индексом " + st1_id);
 
-        Epic test_epic = tm.getEpic(e_id, historyManager);
-        assertNotNull(test_t1,"Не найден эпик с индексом " + e_id);
+        Epic test_epic = tm.getEpic(e1_id, historyManager);
+        assertNotNull(test_t1,"Не найден эпик с индексом " + e1_id);
     }
 
 

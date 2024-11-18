@@ -13,6 +13,12 @@ public class Epic  extends Task {
         subTasks = new HashSet<>();
     }
 
+    public Epic(int id, String name, String description) {
+        super(name, description);
+        this.id = id;
+        subTasks = new HashSet<>();
+    }
+
     @Override
     public String toString() {
         return "TaskManager.Epic{" +
