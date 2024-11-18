@@ -6,43 +6,25 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskManagerTest {
-    static TaskManager tm;
     static HistoryManager historyManager;
-    static int t1_id;
-    static int t2_id;
-    static int e1_id;
-    static int e2_id;
-    static int st1_id;
-    static int st2_id;
-
 
     @BeforeAll
     static void beforeAll() {
-        tm = Managers.getDefault();
         historyManager = Managers.getDefaultHistory();
-
-        Task t1 = new Task("задача 1", "описание задачи 1");
-        t1_id = tm.addTask(t1);
-
-        t1 = new Task("задача 2", "описание задачи 2");
-        t2_id = tm.addTask(t1);
-
-        Epic e1 = new Epic("эпик 1", "описание эпика 1");
-        e1_id = tm.addEpic(e1);
-
-        Epic e2= new Epic("эпик 2", "описание эпика 2");
-        e2_id = tm.addEpic(e2);
-
-        SubTask st = new SubTask("подзадача 4", "описание подзадачи 4 эпика 3", e1_id);
-        st1_id = tm.addSubTask(st);
-
-        st = new SubTask("подзадача 5", "описание подзадачи 5 эпика 3", e1_id);
-        st2_id = tm.addSubTask(st);
     }
-
 
     @Test
     void taskAreEqualsById() {
+        TaskManager tm;
+        tm = Managers.getDefault();
+
+        int t1_id = tm.addTask(new Task("задача 1", "описание задачи 1"));
+        int t2_id = tm.addTask(new Task("задача 2", "описание задачи 2"));
+        int e1_id = tm.addEpic(new Epic("эпик 1", "описание эпика 1"));
+        int e2_id = tm.addEpic(new Epic("эпик 2", "описание эпика 2"));
+        int st1_id = tm.addSubTask(new SubTask("подзадача 4", "описание подзадачи 4 эпика 3", e1_id));
+        int st2_id = tm.addSubTask(new SubTask("подзадача 5", "описание подзадачи 5 эпика 3", e1_id));
+
         Task t1 = tm.getTask(t1_id, historyManager);
         Task tt = new Task(t1_id,"test", "test", TaskStatus.NEW);
         Task t2 = tm.getTask(t2_id, historyManager);
@@ -63,11 +45,16 @@ class InMemoryTaskManagerTest {
 
         assertEquals(st1, stt, "Подзадачи не равны при одинаковом id");
         assertNotEquals(st1, st2, "Подзадачи равны при разных id");
-
-
     }
 
     void taskManagerTest() {
+        TaskManager tm;
+        tm = Managers.getDefault();
+
+        int t1_id = tm.addTask(new Task("задача 1", "описание задачи 1"));
+        int e1_id = tm.addEpic(new Epic("эпик 1", "описание эпика 1"));
+        int st1_id = tm.addSubTask(new SubTask("подзадача 4", "описание подзадачи 4 эпика 3", e1_id));
+
         Task test_t1 = tm.getTask(t1_id, historyManager);
         assertNotNull(test_t1,"Не найдена задача с индексом " + t1_id);
 
@@ -88,6 +75,9 @@ class InMemoryTaskManagerTest {
 
     @Test
     void checkNotChangedAfterAdd(){
+        TaskManager tm;
+        tm = Managers.getDefault();
+
         Task tnBefore = new Task("задача n", "описание задачи n");
         String expectationVal = tnBefore.getName()+"^"+ tnBefore.getDescription()+"^"+ tnBefore.getStatus();
         int tn_id = tm.addTask(tnBefore);
@@ -100,12 +90,16 @@ class InMemoryTaskManagerTest {
 
     @Test
     void checkTaskUpdate(){
-        int tn_id = 1;
-        Task tnUpdate = new Task(tn_id, "задача 1 обновление", "описание обнолвения задачи 1", TaskStatus.NEW);
+        TaskManager tm;
+        tm = Managers.getDefault();
+
+        int t1_id = tm.addTask(new Task("задача 1", "описание задачи 1"));
+
+        Task tnUpdate = new Task(t1_id, "задача 1 обновление", "описание обновления задачи 1", TaskStatus.NEW);
         String expectationVal = tnUpdate.getName()+"^"+ tnUpdate.getDescription()+"^"+ tnUpdate.getStatus();
 
         tm.updateTask(tnUpdate);
-        Task tnAfter = tm.getTask(tn_id, historyManager);
+        Task tnAfter = tm.getTask(t1_id, historyManager);
         String resultVal = tnAfter.getName()+"^"+ tnAfter.getDescription()+"^"+ tnAfter.getStatus();
 
         assertEquals(expectationVal, resultVal, "Задача после обновления изменилась");
@@ -114,7 +108,10 @@ class InMemoryTaskManagerTest {
 
     @Test
     void checkNotAddSubTaskAsEpic(){
-        Epic en = new Epic("тестовый эпик", "Описанеи тестового эпика");
+        TaskManager tm;
+        tm = Managers.getDefault();
+
+        Epic en = new Epic("тестовый эпик", "Описание тестового эпика");
         SubTask stn = new SubTask("тестовая подзадача", "описание тестовой подазадачи", en.getId());
 
         Integer stn_id = tm.addSubTask(stn);
