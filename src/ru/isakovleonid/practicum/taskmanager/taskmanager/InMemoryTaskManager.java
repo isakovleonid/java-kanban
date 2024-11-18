@@ -86,9 +86,8 @@ public class InMemoryTaskManager implements TaskManager{
         return epic;
     }
 
-
     @Override
-    public int addTask(Task newTask) {
+    public Integer addTask(Task newTask) {
         int id = counter++;
         newTask.setId(id);
         updateTask(newTask);
@@ -97,7 +96,7 @@ public class InMemoryTaskManager implements TaskManager{
     }
 
     @Override
-    public int addEpic(Epic newEpic) {
+    public Integer addEpic(Epic newEpic) {
         int id = counter++;
         newEpic.setId(id);
         updateEpic(newEpic);
@@ -106,10 +105,15 @@ public class InMemoryTaskManager implements TaskManager{
     }
 
     @Override
-    public int addSubTask(SubTask newSubTask) {
-        int id = counter++;
-        newSubTask.setId(id);
-        updateSubTask(newSubTask);
+    public Integer addSubTask(SubTask newSubTask) {
+        Integer id = null;
+
+        if (epics.containsKey(newSubTask.getEpic())) {
+
+            id = counter++;
+            newSubTask.setId(id);
+            updateSubTask(newSubTask);
+        }
 
         return id;
     }

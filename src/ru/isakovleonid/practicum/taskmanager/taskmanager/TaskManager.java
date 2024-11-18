@@ -16,11 +16,11 @@ public interface TaskManager {
     SubTask getSubTask(int id, HistoryManager historyManager) ;
     Epic getEpic(int id, HistoryManager historyManager) ;
 
-    int addTask(Task newTask) ;
+    Integer addTask(Task newTask) ;
 
-    int addEpic(Epic newEpic);
+    Integer addEpic(Epic newEpic);
 
-    int addSubTask(SubTask newSubTask) ;
+    Integer addSubTask(SubTask newSubTask) ;
 
     void updateTask(Task newTask);
 

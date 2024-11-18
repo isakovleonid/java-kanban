@@ -112,4 +112,14 @@ class InMemoryTaskManagerTest {
 
     }
 
+    @Test
+    void checkNotAddSubTaskAsEpic(){
+        Epic en = new Epic("тестовый эпик", "Описанеи тестового эпика");
+        SubTask stn = new SubTask("тестовая подзадача", "описание тестовой подазадачи", en.getId());
+
+        Integer stn_id = tm.addSubTask(stn);
+
+        assertNull(stn_id, "Смогли добавить в task manager подазадчу, у которой эпик не добавлен в task manager");
+    }
+
 }
