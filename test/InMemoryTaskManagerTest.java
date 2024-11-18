@@ -66,4 +66,30 @@ class InMemoryTaskManagerTest {
         assertNotNull(Managers.getDefaultHistory(),"В утилитарном классе не создан менеджер задача по умолчанию");
     }
 
+    @Test
+    void checkNotChangedAfterAdd(){
+        Task tnBefore = new Task("задача n", "описание задачи n");
+        String expectationVal = tnBefore.getName()+"^"+ tnBefore.getDescription()+"^"+ tnBefore.getStatus();
+        int tn_id = tm.addTask(tnBefore);
+        Task tnAfter = tm.getTask(tn_id, historyManager);
+        String resultVal = tnAfter.getName()+"^"+ tnAfter.getDescription()+"^"+ tnAfter.getStatus();
+
+        assertEquals(expectationVal, resultVal, "Задача после добавления изменилась");
+
+    }
+
+    @Test
+    void checkTaskUpdate(){
+        int tn_id = 1;
+        Task tnUpdate = new Task(tn_id, "задача 1 обновление", "описание обнолвения задачи 1", TaskStatus.NEW);
+        String expectationVal = tnUpdate.getName()+"^"+ tnUpdate.getDescription()+"^"+ tnUpdate.getStatus();
+
+        tm.updateTask(tnUpdate);
+        Task tnAfter = tm.getTask(tn_id, historyManager);
+        String resultVal = tnAfter.getName()+"^"+ tnAfter.getDescription()+"^"+ tnAfter.getStatus();
+
+        assertEquals(expectationVal, resultVal, "Задача после обновления изменилась");
+
+    }
+
 }
