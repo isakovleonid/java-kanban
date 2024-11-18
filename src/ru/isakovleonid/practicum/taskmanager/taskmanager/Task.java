@@ -1,3 +1,5 @@
+package ru.isakovleonid.practicum.taskmanager.taskmanager;
+
 public class Task {
     protected int id;
     protected String name;
@@ -58,7 +60,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
+        return "TaskManager.Task{" +
                 " id=" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +

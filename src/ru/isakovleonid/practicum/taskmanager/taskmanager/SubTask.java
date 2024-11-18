@@ -1,4 +1,6 @@
-public class SubTask extends Task{
+package ru.isakovleonid.practicum.taskmanager.taskmanager;
+
+public class SubTask extends Task {
     private Integer epic;
 
     public SubTask(String name, String description, Integer epic) {
@@ -18,7 +20,7 @@ public class SubTask extends Task{
 
     @Override
     public String toString() {
-        return "SubTask{" +
+        return "TaskManager.SubTask{" +
                 " id=" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +

@@ -1,3 +1,6 @@
+import ru.isakovleonid.practicum.taskmanager.historymanager.HistoryManager;
+import ru.isakovleonid.practicum.taskmanager.taskmanager.*;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -6,18 +9,18 @@ public class Main {
         TaskManager tm = Managers.getDefault();
         HistoryManager historyManager = Managers.getDefaultHistory();
 
-        /* Создание Task*/
+        /* Создание TaskManager.Task*/
         Task t1 = new Task("задача 1", "описание задачи 1");
         int t1_id = tm.addTask(t1);
 
         t1 = new Task("задача 2", "описание задачи 2");
         int t2_id = tm.addTask(t1);
 
-        /* Создание Epic*/
+        /* Создание TaskManager.Epic*/
         Epic epic = new Epic("эпик 1", "описание эпика 1");
         int epic_id = tm.addEpic(epic);
 
-        /* Создание SubTask уже созданому Epic*/
+        /* Создание TaskManager.SubTask уже созданому TaskManager.Epic*/
         SubTask st = new SubTask("подзадача 4", "описание подзадачи 4 эпика 3", epic_id);
         int st1_id = tm.addSubTask(st);
 
@@ -26,7 +29,7 @@ public class Main {
 
         System.out.println(tm.toString());
 
-        System.out.println("Меням статус Task с id = " + t1_id);
+        System.out.println("Меням статус TaskManager.Task с id = " + t1_id);
 
         t1 = new Task(t1_id, "Задача 1","обновление задачи 1", TaskStatus.DONE);
         tm.updateTask(t1);

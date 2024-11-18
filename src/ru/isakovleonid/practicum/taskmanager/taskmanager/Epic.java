@@ -1,8 +1,10 @@
+package ru.isakovleonid.practicum.taskmanager.taskmanager;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Epic  extends Task{
+public class Epic  extends Task {
     private Set<Integer> subTasks;
 
     public Epic(String name, String description) {
@@ -13,7 +15,7 @@ public class Epic  extends Task{
 
     @Override
     public String toString() {
-        return "Epic{" +
+        return "TaskManager.Epic{" +
                 " id=" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +

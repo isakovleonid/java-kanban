@@ -1,3 +1,7 @@
+package ru.isakovleonid.practicum.taskmanager.historymanager;
+
+import ru.isakovleonid.practicum.taskmanager.taskmanager.Task;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
