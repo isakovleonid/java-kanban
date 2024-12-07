@@ -4,7 +4,7 @@ import ru.isakovleonid.practicum.taskmanager.taskmanager.Task;
 
 import java.util.*;
 
-public class InMemoryHistoryManager implements HistoryManager{
+public class InMemoryHistoryManager implements HistoryManager {
     class LinkedTaskList {
         private Node<Task> first;
         private Node<Task> last;
