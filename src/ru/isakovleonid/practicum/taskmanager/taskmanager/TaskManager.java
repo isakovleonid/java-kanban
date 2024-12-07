@@ -8,19 +8,23 @@ public interface TaskManager {
     @Override
     String toString();
 
-    void deleteAll() ;
+    void deleteAll();
 
-    Task getById(int id, HistoryManager historyManager);
+    Task getById(Integer id);
 
-    Task getTask(int id, HistoryManager historyManager) ;
-    SubTask getSubTask(int id, HistoryManager historyManager) ;
-    Epic getEpic(int id, HistoryManager historyManager) ;
+    HistoryManager getHistoryManager();
 
-    Integer addTask(Task newTask) ;
+    Task getTask(Integer id);
+
+    SubTask getSubTask(Integer id);
+
+    Epic getEpic(Integer id);
+
+    Integer addTask(Task newTask);
 
     Integer addEpic(Epic newEpic);
 
-    Integer addSubTask(SubTask newSubTask) ;
+    Integer addSubTask(SubTask newSubTask);
 
     void updateTask(Task newTask);
 
@@ -28,7 +32,7 @@ public interface TaskManager {
 
     void updateSubTask(SubTask newSubTask);
 
-    void deleteById(int id);
+    void deleteById(Integer id);
 
     List<SubTask> getEpicSubTasks(Epic epic);
 }

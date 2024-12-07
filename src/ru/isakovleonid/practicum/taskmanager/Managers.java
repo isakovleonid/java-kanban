@@ -1,3 +1,5 @@
+package ru.isakovleonid.practicum.taskmanager;
+
 import ru.isakovleonid.practicum.taskmanager.historymanager.HistoryManager;
 import ru.isakovleonid.practicum.taskmanager.historymanager.InMemoryHistoryManager;
 import ru.isakovleonid.practicum.taskmanager.taskmanager.InMemoryTaskManager;
@@ -9,6 +11,7 @@ public class Managers {
     }
 
     public static HistoryManager getDefaultHistory(){
+
         return new InMemoryHistoryManager();
     }
 }
