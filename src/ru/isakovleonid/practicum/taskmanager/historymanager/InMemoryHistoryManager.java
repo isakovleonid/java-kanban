@@ -5,38 +5,6 @@ import ru.isakovleonid.practicum.taskmanager.taskmanager.Task;
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    class LinkedTaskList {
-        private Node<Task> first;
-        private Node<Task> last;
-
-        public Node<Task> linkLast(Task newLastTask) {
-            Node<Task> newNode = new Node<>(null, newLastTask, null);
-
-            Node<Task> prevLast = this.last;
-            this.last = newNode;
-            if (prevLast == null) {
-                this.first = newNode;
-            } else {
-                newNode.prev = prevLast;
-                prevLast.next = newNode;
-            }
-
-            return newNode;
-        }
-
-        public List<Task> getLinkedTasks() {
-            Node<Task> currNode = this.first;
-            List<Task> nodeList = new ArrayList<>();
-
-            while (currNode != null) {
-                nodeList.add(currNode.element);
-                currNode = currNode.next;
-            }
-
-            return nodeList;
-        }
-    }
-
     LinkedTaskList linkedTaskList;
     Map<Integer, Node<Task>> viewHistory;
 
@@ -67,7 +35,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             Node<Task> nodeForRemoving = viewHistory.get(id);
 
             removeNode(nodeForRemoving);
-            viewHistory.remove(nodeForRemoving);
+            viewHistory.remove(id);
         }
     }
 
@@ -85,6 +53,38 @@ public class InMemoryHistoryManager implements HistoryManager {
                 next.prev = prev;
             else
                 linkedTaskList.last = prev;
+        }
+    }
+
+    class LinkedTaskList {
+        private Node<Task> first;
+        private Node<Task> last;
+
+        public Node<Task> linkLast(Task newLastTask) {
+            Node<Task> newNode = new Node<>(null, newLastTask, null);
+
+            Node<Task> prevLast = this.last;
+            this.last = newNode;
+            if (prevLast == null) {
+                this.first = newNode;
+            } else {
+                newNode.prev = prevLast;
+                prevLast.next = newNode;
+            }
+
+            return newNode;
+        }
+
+        public List<Task> getLinkedTasks() {
+            Node<Task> currNode = this.first;
+            List<Task> nodeList = new ArrayList<>();
+
+            while (currNode != null) {
+                nodeList.add(currNode.element);
+                currNode = currNode.next;
+            }
+
+            return nodeList;
         }
     }
 }

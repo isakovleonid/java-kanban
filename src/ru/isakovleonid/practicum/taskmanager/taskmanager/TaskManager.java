@@ -5,9 +5,6 @@ import ru.isakovleonid.practicum.taskmanager.historymanager.HistoryManager;
 import java.util.*;
 
 public interface TaskManager {
-    @Override
-    String toString();
-
     void deleteAll();
 
     Task getById(Integer id);
