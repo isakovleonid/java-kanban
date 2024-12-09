@@ -5,22 +5,23 @@ import ru.isakovleonid.practicum.taskmanager.historymanager.HistoryManager;
 import java.util.*;
 
 public interface TaskManager {
-    @Override
-    String toString();
+    void deleteAll();
 
-    void deleteAll() ;
+    Task getById(Integer id);
 
-    Task getById(int id, HistoryManager historyManager);
+    HistoryManager getHistoryManager();
 
-    Task getTask(int id, HistoryManager historyManager) ;
-    SubTask getSubTask(int id, HistoryManager historyManager) ;
-    Epic getEpic(int id, HistoryManager historyManager) ;
+    Task getTask(Integer id);
 
-    Integer addTask(Task newTask) ;
+    SubTask getSubTask(Integer id);
+
+    Epic getEpic(Integer id);
+
+    Integer addTask(Task newTask);
 
     Integer addEpic(Epic newEpic);
 
-    Integer addSubTask(SubTask newSubTask) ;
+    Integer addSubTask(SubTask newSubTask);
 
     void updateTask(Task newTask);
 
@@ -28,7 +29,7 @@ public interface TaskManager {
 
     void updateSubTask(SubTask newSubTask);
 
-    void deleteById(int id);
+    void deleteById(Integer id);
 
     List<SubTask> getEpicSubTasks(Epic epic);
 }
