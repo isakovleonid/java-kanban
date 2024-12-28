@@ -1,7 +1,11 @@
 package ru.isakovleonid.practicum.taskmanager.taskmanager;
 
+import java.util.Objects;
+
+import static java.lang.String.join;
+
 public class Task {
-    protected int id;
+    protected Integer id;
     protected String name;
     protected String description;
     protected TaskStatus status;
@@ -20,7 +24,7 @@ public class Task {
         this.status = status;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -50,7 +54,7 @@ public class Task {
         if (o == null || getClass() != o.getClass()) return false;
 
         Task task = (Task) o;
-        return getId() == task.getId();
+        return Objects.equals(getId(), task.getId());
     }
 
     @Override
@@ -67,4 +71,9 @@ public class Task {
                 ", status=" + status +
                 '}';
     }
+
+    public String stringForFile() {
+        return join(",", String.valueOf(this.id), TaskType.TASK.toString(), this.name, this.status.toString(),this.description);
+    }
+
 }

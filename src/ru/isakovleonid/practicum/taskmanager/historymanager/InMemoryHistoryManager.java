@@ -22,7 +22,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public void add(Task task) {
         if (task != null) {
-            int taskId = task.getId();
+            Integer taskId = task.getId();
             remove(taskId);
             Node<Task> newNode = linkedTaskList.linkLast(task);
             viewHistory.put(taskId, newNode);
@@ -30,7 +30,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-    public void remove(int id) {
+    public void remove(Integer id) {
         if (viewHistory.containsKey(id)) {
             Node<Task> nodeForRemoving = viewHistory.get(id);
 
