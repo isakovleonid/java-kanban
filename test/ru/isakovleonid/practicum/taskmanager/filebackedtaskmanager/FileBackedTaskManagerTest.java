@@ -1,6 +1,7 @@
 
 package ru.isakovleonid.practicum.taskmanager.filebackedtaskmanager;
 import ru.isakovleonid.practicum.taskmanager.taskmanager.*;
+import ru.isakovleonid.practicum.taskmanager.tasks.*;
 
 import org.junit.Before;
 import org.junit.jupiter.api.AfterAll;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -55,19 +57,19 @@ class FileBackedTaskManagerTest {
 
         Integer e1_id = tm.addEpic(new Epic("эпик 1", "описание эпика 1"));
         stn = new SubTask("тестовая подзадача 1", "описание тестовой подазадачи 1", e1_id);
-        Integer stn1_id = tm.addSubTask(stn);
+        tm.addSubTask(stn);
 
         stn = new SubTask("тестовая подзадача 2", "описание тестовой подазадачи 2", e1_id);
-        Integer stn2_id = tm.addSubTask(stn);
+        tm.addSubTask(stn);
 
         stn = new SubTask("тестовая подзадача 3", "описание тестовой подазадачи 3", e1_id);
-        Integer stn3_id = tm.addSubTask(stn);
+        tm.addSubTask(stn);
 
         task = new Task("тестовая задача 1", "описание тестовой задача 1");
-        Integer task1_id = tm.addTask(task);
+        tm.addTask(task);
 
         task = new Task("тестовая задача 2", "описание тестовой задача 2");
-        Integer task2_id = tm.addTask(task);
+        tm.addTask(task);
 
         Assertions.assertTrue(Files.exists(pathTM),"Не создан файл менеджера задач");
 
@@ -77,7 +79,7 @@ class FileBackedTaskManagerTest {
             throw new RuntimeException(e);
         }
 
-        TaskManager copyTM = new FileBackedTaskManager(copyTMFileName);
+        TaskManager copyTM = FileBackedTaskManager.loadFromFile(new File(copyTMFileName));
         Assertions.assertEquals(tm.toString(), copyTM.toString(), "После копирования через файл наполнение менеджера задача не совпадает");
 
     }

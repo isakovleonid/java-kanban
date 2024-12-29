@@ -1,4 +1,4 @@
-package ru.isakovleonid.practicum.taskmanager.taskmanager;
+package ru.isakovleonid.practicum.taskmanager.tasks;
 
 import java.util.Objects;
 

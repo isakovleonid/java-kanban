@@ -1,6 +1,6 @@
 package ru.isakovleonid.practicum.taskmanager.historymanager;
 
-import ru.isakovleonid.practicum.taskmanager.taskmanager.Task;
+import ru.isakovleonid.practicum.taskmanager.tasks.Task;
 
 import java.util.List;
 

@@ -3,6 +3,7 @@ package ru.isakovleonid.practicum.taskmanager.historymanager;
 import org.junit.jupiter.api.Test;
 import ru.isakovleonid.practicum.taskmanager.Managers;
 import ru.isakovleonid.practicum.taskmanager.taskmanager.*;
+import ru.isakovleonid.practicum.taskmanager.tasks.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -55,10 +56,10 @@ class InMemoryTaskManagerTest {
         Task test_t1 = tm.getTask(t1_id);
         assertNotNull(test_t1,"Не найдена задача с индексом " + t1_id);
 
-        SubTask test_st1 = tm.getSubTask(st1_id);
+        tm.getSubTask(st1_id);
         assertNotNull(test_t1,"Не найдена подзадача с индексом " + st1_id);
 
-        Epic test_epic = tm.getEpic(e1_id);
+        tm.getEpic(e1_id);
         assertNotNull(test_t1,"Не найден эпик с индексом " + e1_id);
     }
 
@@ -125,13 +126,13 @@ class InMemoryTaskManagerTest {
 
         Integer e1_id = tm.addEpic(new Epic("эпик 1", "описание эпика 1"));
         stn = new SubTask("тестовая подзадача 1", "описание тестовой подазадачи 1", e1_id);
-        Integer stn1_id = tm.addSubTask(stn);
+        tm.addSubTask(stn);
 
         stn = new SubTask("тестовая подзадача 2", "описание тестовой подазадачи 2", e1_id);
         Integer stn2_id = tm.addSubTask(stn);
 
         stn = new SubTask("тестовая подзадача 3", "описание тестовой подазадачи 3", e1_id);
-        Integer stn3_id = tm.addSubTask(stn);
+        tm.addSubTask(stn);
 
         tm.deleteById(stn2_id);
 
@@ -156,7 +157,7 @@ class InMemoryTaskManagerTest {
         Integer stn2_id = tm.addSubTask(stn);
 
         stn = new SubTask("тестовая подзадача 3", "описание тестовой подазадачи 3", e1_id);
-        Integer stn3_id = tm.addSubTask(stn);
+        tm.addSubTask(stn);
 
         task = new Task("тестовая задача 1", "описание тестовой задача 1");
         Integer task1_id = tm.addTask(task);
