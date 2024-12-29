@@ -3,6 +3,7 @@ package ru.isakovleonid.practicum.taskmanager.historymanager;
 import org.junit.jupiter.api.Test;
 import ru.isakovleonid.practicum.taskmanager.Managers;
 import ru.isakovleonid.practicum.taskmanager.taskmanager.*;
+import ru.isakovleonid.practicum.taskmanager.tasks.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,7 +37,7 @@ class InMemoryTaskManagerTest {
         assertNotEquals(e1, e2, "Задачи равны при разных id");
 
         SubTask st1 = tm.getSubTask(st1_id);
-        SubTask stt = new SubTask(st1_id,"test", "test", TaskStatus.NEW, e1);
+        SubTask stt = new SubTask(st1_id,"test", "test", TaskStatus.NEW, e1.getId());
         SubTask st2 = tm.getSubTask(st2_id);
 
         assertEquals(st1, stt, "Подзадачи не равны при одинаковом id");
@@ -55,10 +56,10 @@ class InMemoryTaskManagerTest {
         Task test_t1 = tm.getTask(t1_id);
         assertNotNull(test_t1,"Не найдена задача с индексом " + t1_id);
 
-        SubTask test_st1 = tm.getSubTask(st1_id);
+        tm.getSubTask(st1_id);
         assertNotNull(test_t1,"Не найдена подзадача с индексом " + st1_id);
 
-        Epic test_epic = tm.getEpic(e1_id);
+        tm.getEpic(e1_id);
         assertNotNull(test_t1,"Не найден эпик с индексом " + e1_id);
     }
 
@@ -125,13 +126,13 @@ class InMemoryTaskManagerTest {
 
         Integer e1_id = tm.addEpic(new Epic("эпик 1", "описание эпика 1"));
         stn = new SubTask("тестовая подзадача 1", "описание тестовой подазадачи 1", e1_id);
-        Integer stn1_id = tm.addSubTask(stn);
+        tm.addSubTask(stn);
 
         stn = new SubTask("тестовая подзадача 2", "описание тестовой подазадачи 2", e1_id);
         Integer stn2_id = tm.addSubTask(stn);
 
         stn = new SubTask("тестовая подзадача 3", "описание тестовой подазадачи 3", e1_id);
-        Integer stn3_id = tm.addSubTask(stn);
+        tm.addSubTask(stn);
 
         tm.deleteById(stn2_id);
 
@@ -145,7 +146,6 @@ class InMemoryTaskManagerTest {
         tm = Managers.getDefault();
         hm = tm.getHistoryManager();
 
-        Epic epic = new Epic("тестовый эпик", "Описание тестового эпика");
         SubTask stn;
         Task task;
 
@@ -157,7 +157,7 @@ class InMemoryTaskManagerTest {
         Integer stn2_id = tm.addSubTask(stn);
 
         stn = new SubTask("тестовая подзадача 3", "описание тестовой подазадачи 3", e1_id);
-        Integer stn3_id = tm.addSubTask(stn);
+        tm.addSubTask(stn);
 
         task = new Task("тестовая задача 1", "описание тестовой задача 1");
         Integer task1_id = tm.addTask(task);
@@ -172,30 +172,30 @@ class InMemoryTaskManagerTest {
         tm.getTask(task2_id);
 
         tm.getTask(task2_id);
-        assertEquals("[TaskManager.Epic{ id=0', name='эпик 1', description='описание эпика 1', status=NEW', subTasks=[1, 2, 3]'}"
-                        + ", TaskManager.SubTask{ id=1', name='тестовая подзадача 1', description='описание тестовой подазадачи 1', status=NEW', epic=0'} "
-                        + ", TaskManager.SubTask{ id=2', name='тестовая подзадача 2', description='описание тестовой подазадачи 2', status=NEW', epic=0'} "
-                        + ", TaskManager.Task{ id=4', name='тестовая задача 1', description='описание тестовой задача 1', status=NEW}"
-                        + ", TaskManager.Task{ id=5', name='тестовая задача 2', description='описание тестовой задача 2', status=NEW}]"
+        assertEquals("[TaskManager.Epic{ id=1', name='эпик 1', description='описание эпика 1', status=NEW', subTasks=[2, 3, 4]'}"
+                        + ", TaskManager.SubTask{ id=2', name='тестовая подзадача 1', description='описание тестовой подазадачи 1', status=NEW', epic=1'} "
+                        + ", TaskManager.SubTask{ id=3', name='тестовая подзадача 2', description='описание тестовой подазадачи 2', status=NEW', epic=1'} "
+                        + ", TaskManager.Task{ id=5', name='тестовая задача 1', description='описание тестовой задача 1', status=NEW}"
+                        + ", TaskManager.Task{ id=6', name='тестовая задача 2', description='описание тестовой задача 2', status=NEW}]"
                 , hm.getHistory().toString()
                 , "История чтения изменилась, если прочитали еще раз последнюю вычитанную задачу");
 
         tm.getEpic(e1_id);
-        assertEquals("[TaskManager.SubTask{ id=1', name='тестовая подзадача 1', description='описание тестовой подазадачи 1', status=NEW', epic=0'} "
-                        + ", TaskManager.SubTask{ id=2', name='тестовая подзадача 2', description='описание тестовой подазадачи 2', status=NEW', epic=0'} "
-                        + ", TaskManager.Task{ id=4', name='тестовая задача 1', description='описание тестовой задача 1', status=NEW}"
-                        + ", TaskManager.Task{ id=5', name='тестовая задача 2', description='описание тестовой задача 2', status=NEW}"
-                        + ", TaskManager.Epic{ id=0', name='эпик 1', description='описание эпика 1', status=NEW', subTasks=[1, 2, 3]'}]"
+        assertEquals("[TaskManager.SubTask{ id=2', name='тестовая подзадача 1', description='описание тестовой подазадачи 1', status=NEW', epic=1'} "
+                        + ", TaskManager.SubTask{ id=3', name='тестовая подзадача 2', description='описание тестовой подазадачи 2', status=NEW', epic=1'} "
+                        + ", TaskManager.Task{ id=5', name='тестовая задача 1', description='описание тестовой задача 1', status=NEW}"
+                        + ", TaskManager.Task{ id=6', name='тестовая задача 2', description='описание тестовой задача 2', status=NEW}"
+                        + ", TaskManager.Epic{ id=1', name='эпик 1', description='описание эпика 1', status=NEW', subTasks=[2, 3, 4]'}]"
                 , hm.getHistory().toString()
                 ,"Некорректная история, если прочитали первую вычитанную запись");
 
         tm.getSubTask(stn2_id);
         assertEquals(
-                "[TaskManager.SubTask{ id=1', name='тестовая подзадача 1', description='описание тестовой подазадачи 1', status=NEW', epic=0'} "
-                        + ", TaskManager.Task{ id=4', name='тестовая задача 1', description='описание тестовой задача 1', status=NEW}"
-                        + ", TaskManager.Task{ id=5', name='тестовая задача 2', description='описание тестовой задача 2', status=NEW}"
-                        + ", TaskManager.Epic{ id=0', name='эпик 1', description='описание эпика 1', status=NEW', subTasks=[1, 2, 3]'}"
-                        + ", TaskManager.SubTask{ id=2', name='тестовая подзадача 2', description='описание тестовой подазадачи 2', status=NEW', epic=0'} ]"
+                "[TaskManager.SubTask{ id=2', name='тестовая подзадача 1', description='описание тестовой подазадачи 1', status=NEW', epic=1'} "
+                        + ", TaskManager.Task{ id=5', name='тестовая задача 1', description='описание тестовой задача 1', status=NEW}"
+                        + ", TaskManager.Task{ id=6', name='тестовая задача 2', description='описание тестовой задача 2', status=NEW}"
+                        + ", TaskManager.Epic{ id=1', name='эпик 1', description='описание эпика 1', status=NEW', subTasks=[2, 3, 4]'}"
+                        + ", TaskManager.SubTask{ id=3', name='тестовая подзадача 2', description='описание тестовой подазадачи 2', status=NEW', epic=1'} ]"
                 , hm.getHistory().toString()
                 , "Некорректная история, если прочитали вычитанную не первой и не последней задачу");
 

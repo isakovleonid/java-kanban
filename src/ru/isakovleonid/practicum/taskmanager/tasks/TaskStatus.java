@@ -1,4 +1,4 @@
-package ru.isakovleonid.practicum.taskmanager.taskmanager;
+package ru.isakovleonid.practicum.taskmanager.tasks;
 
 public enum TaskStatus {
     NEW,

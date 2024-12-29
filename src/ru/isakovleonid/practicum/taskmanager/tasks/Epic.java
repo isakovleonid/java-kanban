@@ -1,8 +1,10 @@
-package ru.isakovleonid.practicum.taskmanager.taskmanager;
+package ru.isakovleonid.practicum.taskmanager.tasks;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static java.lang.String.join;
 
 public class Epic  extends Task {
     private Set<Integer> subTasks;
@@ -64,5 +66,10 @@ public class Epic  extends Task {
             tempStatus = TaskStatus.NEW;
 
         status = tempStatus;
+    }
+
+    @Override
+    public String stringForFile() {
+        return join(",", String.valueOf(this.id), TaskType.EPIC.toString(), this.name, this.status.toString(),this.description);
     }
 }

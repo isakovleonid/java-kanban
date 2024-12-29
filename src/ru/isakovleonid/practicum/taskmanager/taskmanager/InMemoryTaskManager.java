@@ -2,6 +2,7 @@ package ru.isakovleonid.practicum.taskmanager.taskmanager;
 
 import ru.isakovleonid.practicum.taskmanager.historymanager.HistoryManager;
 import ru.isakovleonid.practicum.taskmanager.historymanager.InMemoryHistoryManager;
+import ru.isakovleonid.practicum.taskmanager.tasks.*;
 
 import java.util.*;
 
@@ -100,7 +101,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Integer addTask(Task newTask) {
-        Integer id = counter++;
+        Integer id = newTask.getId();
+        counter++;
+        if (id == null)
+            id = counter;
+
         newTask.setId(id);
         updateTask(newTask);
 
@@ -109,7 +114,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Integer addEpic(Epic newEpic) {
-        Integer id = counter++;
+        Integer id = newEpic.getId();
+        counter++;
+        if (id == null)
+            id = counter;
+
         newEpic.setId(id);
         updateEpic(newEpic);
 
@@ -118,12 +127,15 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Integer addSubTask(SubTask newSubTask) {
-        Integer id = null, epic;
+        Integer id = newSubTask.getId(), epic;
         epic = newSubTask.getEpic();
         if (epic != null) {
             if (epics.containsKey(epic)) {
 
-                id = counter++;
+                counter++;
+                if (id == null)
+                    id = counter;
+
                 newSubTask.setId(id);
                 updateSubTask(newSubTask);
             }

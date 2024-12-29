@@ -1,4 +1,6 @@
-package ru.isakovleonid.practicum.taskmanager.taskmanager;
+package ru.isakovleonid.practicum.taskmanager.tasks;
+
+import static java.lang.String.join;
 
 public class SubTask extends Task {
     private Integer epic;
@@ -8,10 +10,10 @@ public class SubTask extends Task {
         this.epic = epic;
     }
 
-    /*Конструктор для тестирования обновления через создание нового объекта с тем же id*/
-    public SubTask(Integer id, String name, String description, TaskStatus status, Epic epic) {
+    /*Конструктор для тестирования обновления через создание нового объекта с тем же id и для записи в файл*/
+    public SubTask(Integer id, String name, String description, TaskStatus status, Integer epic) {
         super(id, name, description, status);
-        this.epic = epic.getId();
+        this.epic = epic;
     }
 
     public Integer getEpic() {
@@ -27,5 +29,10 @@ public class SubTask extends Task {
                 ", status=" + status + '\'' +
                 ", epic=" + epic + '\'' +
                 "} ";
+    }
+
+    @Override
+    public String stringForFile() {
+        return join(",", String.valueOf(this.id), TaskType.SUBTASK.toString(), this.name, this.status.toString(),this.description, String.valueOf(this.epic));
     }
 }
