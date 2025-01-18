@@ -5,6 +5,7 @@ import ru.isakovleonid.practicum.taskmanager.historymanager.InMemoryHistoryManag
 import ru.isakovleonid.practicum.taskmanager.tasks.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
     private Integer counter;
@@ -172,7 +173,7 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epics.get(epicId);
 
         List<SubTask> subTaskList = getEpicSubTasks(epic);
-        epic.updateStatus(subTaskList);
+        epic.updateEpicBySubtask(subTaskList);
     }
 
     @Override
@@ -190,9 +191,9 @@ public class InMemoryTaskManager implements TaskManager {
 
         Epic epic = epics.get(id);
         if (epic != null) {
-            for (Integer subTaskId : epic.getSubTasks()) {
-                subTasks.remove(subTaskId);
-            }
+            epic.getSubTasks().stream()
+                            .peek(subTaskId -> subTasks.remove(subTaskId))
+            ;
             epic.deleteSubTaskAll();
             epics.remove(id);
         }
@@ -202,11 +203,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public  List<SubTask> getEpicSubTasks(Epic epic) {
-        List<SubTask> subTaskList = new ArrayList<>();
-        for (Integer subTaskId : epic.getSubTasks()) {
-            subTaskList.add(subTasks.get(subTaskId));
-        }
-
-        return subTaskList;
+        return epic.getSubTasks().stream()
+                .map(subTaskId -> subTasks.get(subTaskId))
+                .collect(Collectors.toList());
     }
 }
