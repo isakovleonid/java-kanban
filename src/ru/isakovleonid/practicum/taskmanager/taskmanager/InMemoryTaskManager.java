@@ -16,12 +16,15 @@ public class InMemoryTaskManager implements TaskManager {
     Map<Integer, SubTask> subTasks;
     Map<Integer, Epic> epics;
 
+    NavigableSet<Task> sortedTasksByStartTime;
+
     public InMemoryTaskManager() {
         counter = 0;
         tasks = new HashMap<>();
         epics = new HashMap<>();
         subTasks = new HashMap<>();
         historyManager = new InMemoryHistoryManager();
+        sortedTasksByStartTime = new TreeSet<>(Comparator.comparing(Task::getStartTime));
     }
 
     @Override
@@ -102,13 +105,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Integer addTask(Task newTask) {
+        if (existsIntersectionByPeriod(newTask))
+            return null;
+
         Integer id = newTask.getId();
-        counter++;
         if (id == null)
-            id = counter;
+            id = ++counter;
 
         newTask.setId(id);
-        updateTask(newTask);
+
+        tasks.put(id, newTask);
+
+        if (newTask.getStartTime() != null)
+            sortedTasksByStartTime.add(newTask);
 
         return id;
     }
@@ -116,57 +125,43 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Integer addEpic(Epic newEpic) {
         Integer id = newEpic.getId();
-        counter++;
         if (id == null)
-            id = counter;
+            id = ++counter;
 
         newEpic.setId(id);
-        updateEpic(newEpic);
+
+        epics.put(id, newEpic);
 
         return id;
     }
 
     @Override
     public Integer addSubTask(SubTask newSubTask) {
-        Integer id = newSubTask.getId(), epic;
-        epic = newSubTask.getEpic();
-        if (epic != null) {
-            if (epics.containsKey(epic)) {
+        if (existsIntersectionByPeriod(newSubTask))
+            return null;
 
-                counter++;
+        Integer id = newSubTask.getId(), epicId;
+        epicId = newSubTask.getEpic();
+        if (epicId != null) {
+            if (epics.containsKey(epicId)) {
                 if (id == null)
-                    id = counter;
+                    id = ++counter;
 
                 newSubTask.setId(id);
-                updateSubTask(newSubTask);
+
+                subTasks.put(id, newSubTask);
+
+                Epic epic = epics.get(epicId);
+                epic.addSubTask(id);
+
+                updateEpicStatus(epicId);
+
+                if (newSubTask.getStartTime() != null)
+                    sortedTasksByStartTime.add(newSubTask);
             }
         }
 
         return id;
-    }
-
-    @Override
-    public void updateTask(Task newTask) {
-        tasks.put(newTask.getId(), newTask);
-    }
-
-    @Override
-    public void updateEpic(Epic newEpic) {
-        epics.put(newEpic.getId(), newEpic);
-    }
-
-    @Override
-    public void updateSubTask(SubTask newSubTask) {
-        if (epics.containsKey(newSubTask.getEpic())) {
-            Integer subTaskId = newSubTask.getId();
-            subTasks.put(subTaskId, newSubTask);
-
-            Integer epicId = newSubTask.getEpic();
-            Epic epic = epics.get(epicId);
-            epic.addSubTask(subTaskId);
-
-            updateEpicStatus(epicId);
-        }
     }
 
     private void updateEpicStatus(Integer epicId) {
@@ -207,4 +202,24 @@ public class InMemoryTaskManager implements TaskManager {
                 .map(subTaskId -> subTasks.get(subTaskId))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Task> getPrioritizedTasks() {
+        return sortedTasksByStartTime.stream().toList();
+    }
+
+    public boolean existsIntersectionByPeriod(Task checkTask) {
+        Task taskIntersectionInPeriod;
+        taskIntersectionInPeriod = this.getPrioritizedTasks().stream()
+                .filter(task -> {if (task.getStartTime() != null && checkTask.getStartTime() != null && !task.equals(checkTask))
+                                    return (task.getEndTime().isAfter(checkTask.getStartTime())
+                                            && task.getStartTime().isBefore(checkTask.getEndTime()));
+                                else
+                                    return false;})
+                .findAny()
+                .orElse(null);
+
+        return taskIntersectionInPeriod != null;
+    }
+
 }

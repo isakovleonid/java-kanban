@@ -24,13 +24,9 @@ public interface TaskManager {
 
     Integer addSubTask(SubTask newSubTask);
 
-    void updateTask(Task newTask);
-
-    void updateEpic(Epic newEpic);
-
-    void updateSubTask(SubTask newSubTask);
-
     void deleteById(Integer id);
 
     List<SubTask> getEpicSubTasks(Epic epic);
+
+    List<Task> getPrioritizedTasks();
 }

@@ -138,27 +138,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
     }
 
-    @Override
-    public void updateEpic(Epic newEpic) {
-        super.updateEpic(newEpic);
-
-        save();
-    }
-
-    @Override
-    public void updateSubTask(SubTask newSubTask) {
-        super.updateSubTask(newSubTask);
-
-        save();
-    }
-
-    @Override
-    public void updateTask(Task newTask) {
-        super.updateTask(newTask);
-
-        save();
-    }
-
     public static void main(String[] args) {
         File file = new File("test.csv");
         TaskManager tm = new FileBackedTaskManager("test.csv")/*FileBackedTaskManager.loadFromFile(file)*/;
@@ -194,6 +173,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 , Duration.ofMinutes(57));
         tm.addTask(task);
 
-        System.out.println(tm.toString());;
+        System.out.println(tm.toString());
     }
 }

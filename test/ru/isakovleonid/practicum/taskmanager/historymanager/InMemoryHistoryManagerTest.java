@@ -123,7 +123,7 @@ class InMemoryTaskManagerTest {
                 , Duration.ofMinutes(70));
         String expectationVal = tnUpdate.getName()+"^"+ tnUpdate.getDescription()+"^"+ tnUpdate.getStatus();
 
-        tm.updateTask(tnUpdate);
+        tm.addTask(tnUpdate);
         Task tnAfter = tm.getTask(t1_id);
         String resultVal = tnAfter.getName()+"^"+ tnAfter.getDescription()+"^"+ tnAfter.getStatus();
 
@@ -210,13 +210,13 @@ class InMemoryTaskManagerTest {
 
         task = new Task("тестовая задача 1"
                 , "описание тестовой задача 1"
-                , LocalDateTime.of(2025, 1, 9, 12, 14)
+                , LocalDateTime.of(2025, 1, 13, 12, 14)
                 , Duration.ofMinutes(50));
         Integer task1_id = tm.addTask(task);
 
         task = new Task("тестовая задача 2"
                 , "описание тестовой задача 2"
-                , LocalDateTime.of(2025, 1, 10, 17, 14)
+                , LocalDateTime.of(2025, 1, 14, 17, 14)
                 , Duration.ofMinutes(50));
         Integer task2_id = tm.addTask(task);
 
@@ -230,16 +230,16 @@ class InMemoryTaskManagerTest {
         assertEquals("[TaskManager.Epic{ id=1', name='эпик 1', description='описание эпика 1', status=NEW', startTime=09.01.2025 12:14:00', duration=150', subTasks=[2, 3, 4]'}, "
                 + "TaskManager.SubTask{ id=2', name='тестовая подзадача 1', description='описание тестовой подазадачи 1', status=NEW', startTime=09.01.2025 12:14:00', duration=50', epic=1'} , "
                 + "TaskManager.SubTask{ id=3', name='тестовая подзадача 2', description='описание тестовой подазадачи 2', status=NEW', startTime=10.01.2025 08:14:00', duration=50', epic=1'} , "
-                + "TaskManager.Task{ id=5', name='тестовая задача 1', description='описание тестовой задача 1', status=NEW, startTime=09.01.2025 12:14:00', duration=50'}, "
-                + "TaskManager.Task{ id=6', name='тестовая задача 2', description='описание тестовой задача 2', status=NEW, startTime=10.01.2025 17:14:00', duration=50'}]"
+                + "TaskManager.Task{ id=5', name='тестовая задача 1', description='описание тестовой задача 1', status=NEW, startTime=13.01.2025 12:14:00', duration=50'}, "
+                + "TaskManager.Task{ id=6', name='тестовая задача 2', description='описание тестовой задача 2', status=NEW, startTime=14.01.2025 17:14:00', duration=50'}]"
                 , hm.getHistory().toString()
                 , "История чтения изменилась, если прочитали еще раз последнюю вычитанную задачу");
 
         tm.getEpic(e1_id);
         assertEquals("[TaskManager.SubTask{ id=2', name='тестовая подзадача 1', description='описание тестовой подазадачи 1', status=NEW', startTime=09.01.2025 12:14:00', duration=50', epic=1'} , "
                 + "TaskManager.SubTask{ id=3', name='тестовая подзадача 2', description='описание тестовой подазадачи 2', status=NEW', startTime=10.01.2025 08:14:00', duration=50', epic=1'} , "
-                + "TaskManager.Task{ id=5', name='тестовая задача 1', description='описание тестовой задача 1', status=NEW, startTime=09.01.2025 12:14:00', duration=50'}, "
-                + "TaskManager.Task{ id=6', name='тестовая задача 2', description='описание тестовой задача 2', status=NEW, startTime=10.01.2025 17:14:00', duration=50'}, "
+                + "TaskManager.Task{ id=5', name='тестовая задача 1', description='описание тестовой задача 1', status=NEW, startTime=13.01.2025 12:14:00', duration=50'}, "
+                + "TaskManager.Task{ id=6', name='тестовая задача 2', description='описание тестовой задача 2', status=NEW, startTime=14.01.2025 17:14:00', duration=50'}, "
                 + "TaskManager.Epic{ id=1', name='эпик 1', description='описание эпика 1', status=NEW', startTime=09.01.2025 12:14:00', duration=150', subTasks=[2, 3, 4]'}]"
                 , hm.getHistory().toString()
                 ,"Некорректная история, если прочитали первую вычитанную запись");
@@ -247,8 +247,8 @@ class InMemoryTaskManagerTest {
         tm.getSubTask(stn2_id);
         assertEquals(
                 "[TaskManager.SubTask{ id=2', name='тестовая подзадача 1', description='описание тестовой подазадачи 1', status=NEW', startTime=09.01.2025 12:14:00', duration=50', epic=1'} , "
-                + "TaskManager.Task{ id=5', name='тестовая задача 1', description='описание тестовой задача 1', status=NEW, startTime=09.01.2025 12:14:00', duration=50'}, "
-                + "TaskManager.Task{ id=6', name='тестовая задача 2', description='описание тестовой задача 2', status=NEW, startTime=10.01.2025 17:14:00', duration=50'}, "
+                + "TaskManager.Task{ id=5', name='тестовая задача 1', description='описание тестовой задача 1', status=NEW, startTime=13.01.2025 12:14:00', duration=50'}, "
+                + "TaskManager.Task{ id=6', name='тестовая задача 2', description='описание тестовой задача 2', status=NEW, startTime=14.01.2025 17:14:00', duration=50'}, "
                 + "TaskManager.Epic{ id=1', name='эпик 1', description='описание эпика 1', status=NEW', startTime=09.01.2025 12:14:00', duration=150', subTasks=[2, 3, 4]'}, "
                 + "TaskManager.SubTask{ id=3', name='тестовая подзадача 2', description='описание тестовой подазадачи 2', status=NEW', startTime=10.01.2025 08:14:00', duration=50', epic=1'} ]"
                 , hm.getHistory().toString()
