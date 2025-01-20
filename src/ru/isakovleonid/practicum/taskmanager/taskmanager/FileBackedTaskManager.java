@@ -15,8 +15,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     String fileName;
     private static final String delimiter = ",";
 
-    public static FileBackedTaskManager loadFromFile(File file) {
-        FileBackedTaskManager result = new FileBackedTaskManager(file.getPath());
+    public static FileBackedTaskManager loadFromFile(String newFileName, File file) {
+        FileBackedTaskManager result = new FileBackedTaskManager(newFileName);
         try (FileReader reader = new FileReader(file)) {
             BufferedReader br = new BufferedReader(reader);
             int cntLine = 0;

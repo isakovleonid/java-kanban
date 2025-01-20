@@ -15,6 +15,8 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+import static org.junit.Assert.assertThrows;
+
 class FileBackedTaskManagerTest {
 
     private static String fileName;
@@ -96,7 +98,19 @@ class FileBackedTaskManagerTest {
             throw new RuntimeException(e);
         }
 
-        TaskManager copyTM = FileBackedTaskManager.loadFromFile(new File(copyTMFileName));
+        TaskManager copyTM = FileBackedTaskManager.loadFromFile(copyTMFileName, new File(fileName));
         Assertions.assertEquals(tm.toString(), copyTM.toString(), "После копирования через файл наполнение менеджера задача не совпадает");
+    }
+
+    @Test
+    void loadFromFileFileNotExists() {
+        File file = new File("testNotExists.csv");;
+
+        assertThrows("Не перехвачено исключение при загрузке несуществующего файла"
+                , ManagerSaveException.class
+                , () -> {
+                        FileBackedTaskManager tm = FileBackedTaskManager.loadFromFile(fileName, file);
+                    }
+                );
     }
 }
