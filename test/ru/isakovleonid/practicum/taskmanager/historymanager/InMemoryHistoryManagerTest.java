@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 class InMemoryTaskManagerTest {
 
     @Test
@@ -144,7 +143,7 @@ class InMemoryTaskManagerTest {
 
         Integer stn_id = tm.addSubTask(stn);
 
-        assertNull(stn_id, "Смогли добавить в task manager подазадчу, у которой эпик не добавлен в task manager");
+        assertNull(stn_id, "Смогли добавить в task manager подзадачу, у которой эпик не добавлен в task manager");
     }
 
     @Test
@@ -155,7 +154,7 @@ class InMemoryTaskManagerTest {
         Epic en = new Epic("тестовый эпик", "Описание тестового эпика");
         SubTask stn;
 
-        Integer e1_id = tm.addEpic(new Epic("эпик 1", "описание эпика 1"));
+        Integer e1_id = tm.addEpic(en);
         stn = new SubTask("тестовая подзадача 1", "описание тестовой подазадачи 1"
                 , e1_id
                 , LocalDateTime.of(2025, 1, 9, 12, 14)
@@ -254,5 +253,80 @@ class InMemoryTaskManagerTest {
                 , hm.getHistory().toString()
                 , "Некорректная история, если прочитали вычитанную не первой и не последней задачу");
 
+    }
+
+    @Test
+    void checkEpicStatus() {
+        TaskManager tm;
+        HistoryManager hm;
+        tm = Managers.getDefault();
+        hm = tm.getHistoryManager();
+
+        Epic e1 = new Epic("эпик 1", "описание эпика 1");
+        Integer e1_id = tm.addEpic(e1);
+        SubTask stn;
+
+        stn = new SubTask("тестовая подзадача 1", "описание тестовой подазадачи 1"
+                , e1_id
+                , LocalDateTime.of(2025, 1, 9, 12, 14)
+                , Duration.ofMinutes(50));
+        Integer stn1_id = tm.addSubTask(stn);
+
+        stn = new SubTask("тестовая подзадача 2", "описание тестовой подазадачи 2"
+                , e1_id
+                , LocalDateTime.of(2025, 1, 10, 8, 14)
+                , Duration.ofMinutes(50));
+        Integer stn2_id = tm.addSubTask(stn);
+
+
+        assertEquals(e1.getStatus()
+                        , TaskStatus.NEW
+                        , "Все подзадачи в состоянии " + TaskStatus.NEW
+                        + ". Состояние эпика должно быть " + TaskStatus.NEW
+                        + ". Текущее значение " + e1.getStatus());
+
+        stn = new SubTask(stn1_id
+                ,"тестовая подзадача 1", "описание тестовой подазадачи 1"
+                , TaskStatus.IN_PROGRESS
+                , e1_id
+                , LocalDateTime.of(2025, 1, 9, 12, 14)
+                , Duration.ofMinutes(50));
+        tm.addSubTask(stn);
+
+        assertEquals(e1.getStatus()
+                , TaskStatus.IN_PROGRESS
+                , "Одна подзадача в состоянии " + TaskStatus.IN_PROGRESS
+                        + ", остальные подзадачи в состоянии " + TaskStatus.NEW
+                        + ". Состояние эпика должно быть " + TaskStatus.IN_PROGRESS
+                        + ". Текущее значение " + e1.getStatus());
+
+        stn = new SubTask(stn1_id
+                ,"тестовая подзадача 1", "описание тестовой подазадачи 1"
+                , TaskStatus.DONE
+                , e1_id
+                , LocalDateTime.of(2025, 1, 9, 12, 14)
+                , Duration.ofMinutes(50));
+        tm.addSubTask(stn);
+
+        assertEquals(e1.getStatus()
+                , TaskStatus.IN_PROGRESS
+                , "Одна подзадача в состоянии " + TaskStatus.DONE
+                        + ", остальные подзадачи в состоянии " + TaskStatus.NEW
+                        + ". Состояние эпика должно быть " + TaskStatus.IN_PROGRESS
+                        + ". Текущее значение " + e1.getStatus());
+
+        stn = new SubTask(stn2_id
+                ,"тестовая подзадача 2", "описание тестовой подазадачи 2"
+                , TaskStatus.DONE
+                , e1_id
+                , LocalDateTime.of(2025, 1, 10, 8, 14)
+                , Duration.ofMinutes(50));
+        tm.addSubTask(stn);
+
+        assertEquals(e1.getStatus()
+                , TaskStatus.DONE
+                , "Все подзадачи в состоянии " + TaskStatus.DONE
+                        + ". Состояние эпика должно быть " + TaskStatus.DONE
+                        + ". Текущее значение " + e1.getStatus());
     }
 }

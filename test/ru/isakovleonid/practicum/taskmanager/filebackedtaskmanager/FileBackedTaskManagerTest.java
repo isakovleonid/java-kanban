@@ -1,4 +1,3 @@
-
 package ru.isakovleonid.practicum.taskmanager.filebackedtaskmanager;
 import ru.isakovleonid.practicum.taskmanager.taskmanager.*;
 import ru.isakovleonid.practicum.taskmanager.tasks.*;
@@ -15,7 +14,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
-
 
 class FileBackedTaskManagerTest {
 
@@ -100,6 +98,5 @@ class FileBackedTaskManagerTest {
 
         TaskManager copyTM = FileBackedTaskManager.loadFromFile(new File(copyTMFileName));
         Assertions.assertEquals(tm.toString(), copyTM.toString(), "После копирования через файл наполнение менеджера задача не совпадает");
-
     }
 }
