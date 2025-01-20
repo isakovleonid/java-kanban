@@ -27,28 +27,28 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     String[] taskParams = line.split(delimiter);
 
                     if (7 == taskParams.length && taskParams[1].equals(TaskType.TASK.toString())) {
-                        Task task = new Task(Integer.parseInt(taskParams[0])
-                                , taskParams[2]
-                                , taskParams[4]
-                                , TaskStatus.valueOf(taskParams[3])
-                                , LocalDateTime.parse(taskParams[5], Task.TASK_DATE_TIME)
-                                , Duration.ofMinutes(Long.parseLong(taskParams[6])));
+                        Task task = new Task(Integer.parseInt(taskParams[0]),
+                                taskParams[2],
+                                taskParams[4],
+                                TaskStatus.valueOf(taskParams[3]),
+                                LocalDateTime.parse(taskParams[5], Task.TASK_DATE_TIME),
+                                Duration.ofMinutes(Long.parseLong(taskParams[6])));
 
                         result.addTask(task);
                     } else if (7 == taskParams.length && taskParams[1].equals(TaskType.EPIC.toString())) {
-                        Epic epic = new Epic(Integer.parseInt(taskParams[0])
-                                , taskParams[2]
-                                , taskParams[4]);
+                        Epic epic = new Epic(Integer.parseInt(taskParams[0]),
+                                taskParams[2],
+                                taskParams[4]);
 
                         result.addEpic(epic);
                     } else if (8 == taskParams.length && taskParams[1].equals(TaskType.SUBTASK.toString())) {
-                        SubTask subTask = new SubTask(Integer.parseInt(taskParams[0])
-                                , taskParams[2]
-                                , taskParams[4]
-                                , TaskStatus.valueOf(taskParams[3])
-                                , Integer.parseInt(taskParams[7])
-                                , LocalDateTime.parse(taskParams[5], Task.TASK_DATE_TIME)
-                                , Duration.ofMinutes(Long.parseLong(taskParams[6])));
+                        SubTask subTask = new SubTask(Integer.parseInt(taskParams[0]),
+                                taskParams[2],
+                                taskParams[4],
+                                TaskStatus.valueOf(taskParams[3]),
+                                Integer.parseInt(taskParams[7]),
+                                LocalDateTime.parse(taskParams[5], Task.TASK_DATE_TIME),
+                                Duration.ofMinutes(Long.parseLong(taskParams[6])));
 
                         result.addSubTask(subTask);
                     }
@@ -146,31 +146,31 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         Task task;
 
         Integer e1id = tm.addEpic(new Epic("эпик 1", "описание эпика 1"));
-        stn = new SubTask("тестовая подзадача 1", "описание тестовой подазадачи 1", e1id
-                , LocalDateTime.of(2025,1,10,9,18)
-                , Duration.ofMinutes(30));
+        stn = new SubTask("тестовая подзадача 1", "описание тестовой подазадачи 1", e1id,
+                LocalDateTime.of(2025,1,10,9,18),
+                Duration.ofMinutes(30));
         tm.addSubTask(stn);
 
-        stn = new SubTask("тестовая подзадача 2", "описание тестовой подазадачи 2", e1id
-                , LocalDateTime.of(2025,1,12,15,0)
-                , Duration.ofMinutes(60));
+        stn = new SubTask("тестовая подзадача 2", "описание тестовой подазадачи 2", e1id,
+                LocalDateTime.of(2025,1,12,15,0),
+                Duration.ofMinutes(60));
         tm.addSubTask(stn);
 
-        stn = new SubTask("тестовая подзадача 3", "описание тестовой подазадачи 3", e1id
-                , LocalDateTime.of(2025,1,14,9,18)
-                , Duration.ofMinutes(5));
+        stn = new SubTask("тестовая подзадача 3", "описание тестовой подазадачи 3", e1id,
+                LocalDateTime.of(2025,1,14,9,18),
+                Duration.ofMinutes(5));
         tm.addSubTask(stn);
 
-        task = new Task("тестовая задача 1"
-                , "описание тестовой задача 1"
-                , LocalDateTime.of(2025,1,14,9,18)
-                , Duration.ofMinutes(360));
+        task = new Task("тестовая задача 1",
+                "описание тестовой задача 1",
+                LocalDateTime.of(2025,1,14,9,18),
+                Duration.ofMinutes(360));
         tm.addTask(task);
 
-        task = new Task("тестовая задача 2"
-                , "описание тестовой задача 2"
-                , LocalDateTime.of(2025,1,14,18,0)
-                , Duration.ofMinutes(57));
+        task = new Task("тестовая задача 2",
+                "описание тестовой задача 2",
+                LocalDateTime.of(2025,1,14,18,0),
+                Duration.ofMinutes(57));
         tm.addTask(task);
 
         System.out.println(tm.toString());

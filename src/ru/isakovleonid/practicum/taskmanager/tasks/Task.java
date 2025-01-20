@@ -91,19 +91,19 @@ public class Task {
     }
 
     public String stringForFile() {
-        return join(","
-                , String.valueOf(this.id)
-                , TaskType.TASK.toString()
-                , this.name
-                , this.status.toString()
-                , this.description
-                , (this.startTime != null ? this.startTime.format(TASK_DATE_TIME) : null)
-                , String.valueOf((this.duration != null ? this.duration.toMinutes() : null))
+        return join(",",
+                String.valueOf(this.id),
+                TaskType.TASK.toString(),
+                this.name,
+                this.status.toString(),
+                this.description,
+                (this.startTime != null ? this.startTime.format(TASK_DATE_TIME) : null),
+                String.valueOf((this.duration != null ? this.duration.toMinutes() : null))
         );
     }
 
     public LocalDateTime getEndTime() {
-        return (this.startTime != null && this.duration != null ? this.startTime.plus(this.duration): null);
+        return (this.startTime != null && this.duration != null ? this.startTime.plus(this.duration) : null);
     }
 
     public LocalDateTime getStartTime() {

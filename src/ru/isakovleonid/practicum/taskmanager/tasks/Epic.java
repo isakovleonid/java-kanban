@@ -90,14 +90,14 @@ public class Epic  extends Task {
 
     @Override
     public String stringForFile() {
-        return join(","
-                , String.valueOf(this.id)
-                , TaskType.EPIC.toString()
-                , this.name
-                , this.status.toString()
-                , this.description
-                , this.startTime != null ? this.startTime.format(TASK_DATE_TIME) : null
-                , String.valueOf(this.duration != null ? this.duration.toMinutes() : null)
+        return join(",",
+                String.valueOf(this.id),
+                TaskType.EPIC.toString(),
+                this.name,
+                this.status.toString(),
+                this.description,
+                this.startTime != null ? this.startTime.format(TASK_DATE_TIME) : null,
+                String.valueOf(this.duration != null ? this.duration.toMinutes() : null)
         );
     }
 

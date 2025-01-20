@@ -211,12 +211,14 @@ public class InMemoryTaskManager implements TaskManager {
     public boolean existsIntersectionByPeriod(Task checkTask) {
         Task taskIntersectionInPeriod;
         taskIntersectionInPeriod = this.getPrioritizedTasks().stream()
-                .filter(task -> {   if (task.getStartTime() != null && checkTask.getStartTime() != null && !task.equals(checkTask))
+                .filter(task -> {
+                                    if (task.getStartTime() != null && checkTask.getStartTime() != null && !task.equals(checkTask))
                                         return (task.getEndTime().isAfter(checkTask.getStartTime())
                                                 && task.getStartTime().isBefore(checkTask.getEndTime()));
                                     else
                                         return false;
-                                } )
+                                }
+                                )
                 .findAny()
                 .orElse(null);
 
