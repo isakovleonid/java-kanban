@@ -1,13 +1,13 @@
 package ru.isakovleonid.practicum.taskmanager.tasks;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.*;
 import static java.lang.String.join;
 
 public class Epic  extends Task {
     private Set<Integer> subTasks;
+    private LocalDateTime endTime;
 
     public Epic(String name, String description) {
         super(name, description);
@@ -28,6 +28,8 @@ public class Epic  extends Task {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", status=" + status + '\'' +
+                ", startTime=" + (this.startTime != null ? this.startTime.format(TASK_DATE_TIME) : null) + '\'' +
+                ", duration=" + (this.duration != null ? this.duration.toMinutes() : null) + '\'' +
                 ", subTasks=" + subTasks + '\'' +
                 '}';
     }
@@ -48,7 +50,7 @@ public class Epic  extends Task {
         return subTasks;
     }
 
-    public void updateStatus(List<SubTask> subTasks) {
+    public void updateEpicBySubtask(List<SubTask> subTasks) {
         int countDone = 0, countNew = 0;
         TaskStatus tempStatus = TaskStatus.IN_PROGRESS;
 
@@ -66,10 +68,41 @@ public class Epic  extends Task {
             tempStatus = TaskStatus.NEW;
 
         status = tempStatus;
+
+        startTime =  subTasks.stream()
+                .map(subTask -> subTask.startTime)
+                .min(LocalDateTime::compareTo)
+                .orElse(null);
+
+        long durationSubTasksInMinutes = subTasks.stream()
+                .map(subtask -> subtask.duration)
+                .map(Duration::toMinutes)
+                .mapToLong(Long::valueOf)
+                .sum();
+
+        duration = Duration.ofMinutes(durationSubTasksInMinutes);
+
+        endTime = subTasks.stream()
+                .map(Task::getEndTime)
+                .max(LocalDateTime::compareTo)
+                .orElse(null);
     }
 
     @Override
     public String stringForFile() {
-        return join(",", String.valueOf(this.id), TaskType.EPIC.toString(), this.name, this.status.toString(),this.description);
+        return join(",",
+                String.valueOf(this.id),
+                TaskType.EPIC.toString(),
+                this.name,
+                this.status.toString(),
+                this.description,
+                this.startTime != null ? this.startTime.format(TASK_DATE_TIME) : null,
+                String.valueOf(this.duration != null ? this.duration.toMinutes() : null)
+        );
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 }
