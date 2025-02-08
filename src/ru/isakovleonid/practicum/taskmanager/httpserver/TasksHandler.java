@@ -1,7 +1,5 @@
 package ru.isakovleonid.practicum.taskmanager.httpserver;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import ru.isakovleonid.practicum.taskmanager.taskmanager.TaskManager;
@@ -11,15 +9,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
-import java.time.Duration;
-import java.time.LocalDateTime;
+import java.util.List;
+
 
 public class TasksHandler extends BaseHttpHandler implements HttpHandler {
-    private TaskManager taskManager;
-
     public TasksHandler(TaskManager taskManager) {
-        this.taskManager = taskManager;
+        super(taskManager);
+    }
+
+    private String handleGetTasks() {
+        List<Task> tasks = this.taskManager.getTasks();
+
+        return gson.toJson(tasks);
     }
 
     private String handleGetTaskId(int id) throws ClassNotFoundException {
@@ -28,27 +29,27 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
         if (task == null)
             throw new ClassNotFoundException("Не найдена задача с id = " + id);
 
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(Duration.class, new DurationTypeAdapter())
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
-                .create();
-
         return gson.toJson(task);
     }
 
     public String handlePostTaskId(String body) throws ClassNotFoundException {
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(Duration.class, new DurationTypeAdapter())
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
-                .create();
         Task task = gson.fromJson(body, Task.class);
 
         if (task == null)
             throw new ClassNotFoundException("Не удалось создать задачу");
-        else
-            taskManager.addTask(task);
 
-        return gson.toJson(task.getId());
+        taskManager.addTask(task);
+
+        return gson.toJson(task);
+    }
+
+    public void handleDeleteTaskId(int id) throws ClassNotFoundException {
+        Task task = this.taskManager.getTask(id);
+
+        if (task == null)
+            throw new ClassNotFoundException("Не найдена задача с id = " + id);
+
+        taskManager.deleteById(id);
     }
 
     @Override
@@ -56,25 +57,30 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
         String method = exchange.getRequestMethod();
         URI uri = exchange.getRequestURI();
         String path = uri.getPath();
-        String[] splitedPath = path.split("/");
+        String[] splitPath = path.split("/");
         String response = "";
         InputStream request;
 
         try {
+            if (!splitPath[1].equals("tasks"))
+                throw new Exception("Неверный формат запроса");
+
             switch (method) {
                 case "GET":
-                    if (splitedPath.length == 2)
-                        throw new Exception("Метод еще не реализован");
-                    else if (splitedPath.length == 3) {
-                        int id = Integer.parseInt(splitedPath[2]);
+                    if (splitPath.length == 2) {
+                        response = handleGetTasks();
+                        sendText(exchange, response);
+                    } else if (splitPath.length == 3) {
+                        int id = Integer.parseInt(splitPath[2]);
 
                         response = handleGetTaskId(id);
                         sendText(exchange, response);
-                    }
+                    } else
+                        throw new Exception("Неверный формат запроса");
                     break;
                 case "POST":
-                    if (splitedPath.length != 2)
-                        super.sendNotFound(exchange, "Неверный формат запроса");
+                    if (splitPath.length != 2)
+                        throw new Exception("Неверный формат запроса");
                     else {
                         request = exchange.getRequestBody();
                         String body = new String(request.readAllBytes(), StandardCharsets.UTF_8);
@@ -84,18 +90,23 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
                     }
                     break;
                 case "DELETE":
-                    throw new Exception("Метод еще не реализован");
-                    //break;
+                    if (splitPath.length != 3)
+                        throw new Exception("Неверный формат запроса");
+                    else {
+                        int id = Integer.parseInt(splitPath[2]);
+
+                        handleDeleteTaskId(id);
+
+                        super.sendCreated(exchange, "Задача удалена");
+                    }
+                    break;
                 default:
                     super.sendNotFound(exchange, "Неверный формат запроса");
             }
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             super.sendNotFound(exchange, "Ошибка преобразования числа");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             super.sendNotFound(exchange, e.getMessage());
         }
-
     }
 }

@@ -14,9 +14,15 @@ public interface TaskManager {
 
     Task getTask(Integer id);
 
+    List<Task> getTasks();
+
     SubTask getSubTask(Integer id);
 
+    List<SubTask> getSubTasks();
+
     Epic getEpic(Integer id);
+
+    List<Epic> getEpics();
 
     Integer addTask(Task newTask);
 

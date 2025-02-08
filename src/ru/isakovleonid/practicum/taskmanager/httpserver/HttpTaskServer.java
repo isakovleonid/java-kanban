@@ -2,6 +2,7 @@ package ru.isakovleonid.practicum.taskmanager.httpserver;
 
 import com.sun.net.httpserver.HttpServer;
 import ru.isakovleonid.practicum.taskmanager.Managers;
+import ru.isakovleonid.practicum.taskmanager.historymanager.HistoryManager;
 import ru.isakovleonid.practicum.taskmanager.taskmanager.TaskManager;
 import ru.isakovleonid.practicum.taskmanager.tasks.Epic;
 import ru.isakovleonid.practicum.taskmanager.tasks.SubTask;
@@ -17,7 +18,7 @@ public class HttpTaskServer {
     private HttpServer  server;
     private TaskManager taskManager;
 
-    public HttpTaskServer(int port) {
+    public HttpTaskServer(int port, TaskManager taskManager) {
         try {
             this.port = port;
             server = HttpServer.create(new InetSocketAddress(port), 0);
@@ -25,7 +26,7 @@ public class HttpTaskServer {
             System.out.println("Не удалось запустить сервер на порту " + port);;
         }
 
-        taskManager = Managers.getDefault();
+        this.taskManager = taskManager;
 
         server.createContext("/tasks", new TasksHandler(taskManager));
         server.createContext("/subtasks", new SubTasksHandler(taskManager));
@@ -44,11 +45,12 @@ public class HttpTaskServer {
 
     public static void main(String[] args) {
         int runPort = 8080;
-        HttpTaskServer httpTaskServer = new HttpTaskServer(runPort);
+        TaskManager tm = Managers.getDefault();
+        HistoryManager hm = tm.getHistoryManager();
+
+        HttpTaskServer httpTaskServer = new HttpTaskServer(runPort, tm);
 
         httpTaskServer.start();
-
-        TaskManager tm = httpTaskServer.taskManager;
 
         Integer t1_id = tm.addTask(new Task("задача 1", "описание задачи 1"));
         Integer t2_id = tm.addTask(new Task("задача 2", "описание задачи 2"));

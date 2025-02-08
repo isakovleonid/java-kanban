@@ -105,6 +105,21 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    public List<Epic> getEpics() {
+        return epics.values().stream().toList();
+    }
+
+    @Override
+    public List<SubTask> getSubTasks() {
+        return subTasks.values().stream().toList();
+    }
+
+    @Override
+    public List<Task> getTasks() {
+        return tasks.values().stream().toList();
+    }
+
+    @Override
     public Integer addTask(Task newTask) {
         if (existsIntersectionByPeriod(newTask))
             return null;
