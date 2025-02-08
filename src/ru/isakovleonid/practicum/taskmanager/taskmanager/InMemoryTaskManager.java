@@ -75,6 +75,7 @@ public class InMemoryTaskManager implements TaskManager {
         Task task;
         task = tasks.get(id);
 
+
         if (task != null)
             historyManager.add(task);
 
@@ -101,6 +102,21 @@ public class InMemoryTaskManager implements TaskManager {
             historyManager.add(epic);
 
         return epic;
+    }
+
+    @Override
+    public List<Epic> getEpics() {
+        return epics.values().stream().toList();
+    }
+
+    @Override
+    public List<SubTask> getSubTasks() {
+        return subTasks.values().stream().toList();
+    }
+
+    @Override
+    public List<Task> getTasks() {
+        return tasks.values().stream().toList();
     }
 
     @Override
