@@ -97,7 +97,7 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
 
                         handleDeleteTaskId(id);
 
-                        super.sendCreated(exchange, "Задача удалена");
+                        super.sendText(exchange, "Задача удалена");
                     }
                     break;
                 default:

@@ -96,7 +96,7 @@ public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
 
                         handleDeleteSubTaskId(id);
 
-                        super.sendCreated(exchange, "Задача удалена");
+                        super.sendText(exchange, "Задача удалена");
                     }
                     break;
                 default:
