@@ -35,7 +35,7 @@ public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
         Epic epic = gson.fromJson(body, Epic.class);
 
         if (epic == null)
-            throw new ClassNotFoundException("Не удалось создать эпик");
+            throw new ClassNotFoundException("Не удалось создать эпик из JSON");
 
         taskManager.addEpic(epic);
 

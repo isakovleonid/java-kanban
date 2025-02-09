@@ -2,6 +2,7 @@ package ru.isakovleonid.practicum.taskmanager.httpserver;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import ru.isakovleonid.practicum.taskmanager.taskmanager.ManagerSaveException;
 import ru.isakovleonid.practicum.taskmanager.taskmanager.TaskManager;
 import ru.isakovleonid.practicum.taskmanager.tasks.Task;
 
@@ -36,7 +37,7 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
         Task task = gson.fromJson(body, Task.class);
 
         if (task == null)
-            throw new ClassNotFoundException("Не удалось создать задачу");
+            throw new ClassNotFoundException("Не удалось создать задачу из JSON");
 
         taskManager.addTask(task);
 
@@ -105,6 +106,8 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
             }
         } catch (NumberFormatException e) {
             super.sendNotFound(exchange, "Ошибка преобразования числа");
+        } catch (ManagerSaveException e) {
+            super.sendHasInteractions(exchange, e.getMessage());
         } catch (Exception e) {
             super.sendNotFound(exchange, e.getMessage());
         }

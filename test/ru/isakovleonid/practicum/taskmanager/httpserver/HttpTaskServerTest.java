@@ -29,8 +29,14 @@ class HttpTaskServerTest {
     void setUp() {
         httpTaskServer = new HttpTaskServer(PORT, tm);
         tm.deleteAll();
-        Integer t1Id = tm.addTask(new Task("задача 1", "описание задачи 1"));
-        Integer t2Id = tm.addTask(new Task("задача 2", "описание задачи 2"));
+        Integer t1Id = tm.addTask(new Task("задача 1",
+                            "описание задачи 1",
+                            LocalDateTime.of(2025,1,10,9,18),
+                            Duration.ofMinutes(30)));
+        Integer t2Id = tm.addTask(new Task("задача 2",
+                "описание задачи 2",
+                          LocalDateTime.of(2025,1,11,9,18),
+                          Duration.ofMinutes(30)));
         Integer e1Id = tm.addEpic(new Epic("эпик 1", "описание эпика 1"));
         Integer e2Id = tm.addEpic(new Epic("эпик 2", "описание эпика 2"));
         Integer st1Id = tm.addSubTask(new SubTask("подзадача 4", "описание подзадачи 4 эпика 3",
@@ -215,7 +221,10 @@ class HttpTaskServerTest {
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
                 .create();
 
-        Task task = new Task("задача на добавление", "описание задачи на добавление", LocalDateTime.of(2025,2,1,15,45), Duration.ofMinutes(20));
+        Task task = new Task("задача на добавление",
+                        "описание задачи на добавление",
+                        LocalDateTime.of(2025,2,1,15,45),
+                        Duration.ofMinutes(20));
         String requestBody = gson.toJson(task);
 
         request = HttpRequest.newBuilder()
@@ -232,7 +241,6 @@ class HttpTaskServerTest {
         Task taskAdded = tm.getTask(taskAddedId);
         assertNotNull(taskAdded, "Не добавлена новая задача");
 
-
         request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:" + PORT + "/tasksInvalidURI/"))
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -240,6 +248,18 @@ class HttpTaskServerTest {
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(HTTP_NOT_FOUND, response.statusCode(), "Для необрабатываемого URI вернулся ошибочный статус");
 
+        task = new Task("задача на добавление",
+                "описание задачи на добавление",
+                LocalDateTime.of(2025,2,1,15,55),
+                Duration.ofMinutes(20));
+        requestBody = gson.toJson(task);
+
+        request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:" + PORT + "/tasks"))
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+        response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(HTTP_NOT_ACCEPTABLE, response.statusCode(), "Удалось создать задачу с пересечением");
     }
 
     @Test
@@ -252,8 +272,12 @@ class HttpTaskServerTest {
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
                 .create();
 
-        SubTask task = new SubTask("подзадача на добавление", "описание подзадачи на добавление", 3, LocalDateTime.of(2025,2,1,15,45), Duration.ofMinutes(20));
-        String requestBody = gson.toJson(task);
+        SubTask subTask = new SubTask("подзадача на добавление",
+                "описание подзадачи на добавление",
+                3,
+                LocalDateTime.of(2025,2,1,15,45),
+                Duration.ofMinutes(20));
+        String requestBody = gson.toJson(subTask);
 
         request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:" + PORT + "/subtasks"))
@@ -269,7 +293,6 @@ class HttpTaskServerTest {
         SubTask subTaskAdded = tm.getSubTask(subTaskAddedId);
         assertNotNull(subTaskAdded, "Не добавлена новая подзадача");
 
-
         request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:" + PORT + "/subtasksInvalidURI/"))
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -277,6 +300,19 @@ class HttpTaskServerTest {
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(HTTP_NOT_FOUND, response.statusCode(), "Для необрабатываемого URI вернулся ошибочный статус");
 
+        subTask = new SubTask("задача на добавление",
+                "описание задачи на добавление",
+                3,
+                LocalDateTime.of(2025,2,1,15,55),
+                Duration.ofMinutes(20));
+        requestBody = gson.toJson(subTask);
+
+        request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:" + PORT + "/subtasks"))
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+        response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(HTTP_NOT_ACCEPTABLE, response.statusCode(), "Удалось создать подзадачу с пересечением");
     }
 
     @Test

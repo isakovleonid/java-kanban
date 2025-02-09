@@ -35,4 +35,6 @@ public interface TaskManager {
     List<SubTask> getEpicSubTasks(Epic epic);
 
     List<Task> getPrioritizedTasks();
+
+    boolean existsIntersectionByPeriod(Task checkTask);
 }
