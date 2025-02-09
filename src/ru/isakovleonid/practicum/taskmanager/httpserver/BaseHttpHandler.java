@@ -26,10 +26,6 @@ public class BaseHttpHandler {
         this.taskManager = taskManager;
     }
 
-    public Gson getGson() {
-        return gson;
-    }
-
     protected void sendText(HttpExchange exchange, String text) throws IOException {
         byte[] resp = text.getBytes(charset);
 

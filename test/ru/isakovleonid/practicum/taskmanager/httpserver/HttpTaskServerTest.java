@@ -16,6 +16,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+import static java.net.HttpURLConnection.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HttpTaskServerTest {
@@ -70,7 +71,7 @@ class HttpTaskServerTest {
                 .GET()
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(404, response.statusCode(), "Для несуществующей задачи вернулся ошибочный статус");
+        assertEquals(HTTP_NOT_FOUND, response.statusCode(), "Для несуществующей задачи вернулся ошибочный статус");
 
         request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:" + PORT + "/tasksInvalidURI/"))
@@ -79,7 +80,7 @@ class HttpTaskServerTest {
                 .GET()
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(404, response.statusCode(), "Для необрабатываемого URI вернулся неверный статус");
+        assertEquals(HTTP_NOT_FOUND, response.statusCode(), "Для необрабатываемого URI вернулся неверный статус");
 
         request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:" + PORT + "/tasks/s34"))
@@ -88,7 +89,7 @@ class HttpTaskServerTest {
                 .GET()
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(404, response.statusCode(), "Для некорректного с точки зрения типа значений в uri вернулся неверный статус");
+        assertEquals(HTTP_NOT_FOUND, response.statusCode(), "Для некорректного с точки зрения типа значений в uri вернулся неверный статус");
 
         request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:" + PORT + "/tasks/"))
@@ -122,7 +123,7 @@ class HttpTaskServerTest {
                 .GET()
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(404, response.statusCode(), "Для несуществующей подзадачи вернулся ошибочный статус");
+        assertEquals(HTTP_NOT_FOUND, response.statusCode(), "Для несуществующей подзадачи вернулся ошибочный статус");
 
         request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:" + PORT + "/subtasksInvalidURI/"))
@@ -131,7 +132,7 @@ class HttpTaskServerTest {
                 .GET()
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(404, response.statusCode(), "Для необрабатываемого URI вернулся неверный статус");
+        assertEquals(HTTP_NOT_FOUND, response.statusCode(), "Для необрабатываемого URI вернулся неверный статус");
 
         request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:" + PORT + "/subtasks/s34"))
@@ -140,7 +141,7 @@ class HttpTaskServerTest {
                 .GET()
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(404, response.statusCode(), "Для некорректного с точки зрения типа значений в uri вернулся неверный статус");
+        assertEquals(HTTP_NOT_FOUND, response.statusCode(), "Для некорректного с точки зрения типа значений в uri вернулся неверный статус");
 
         request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:" + PORT + "/subtasks/"))
@@ -174,7 +175,7 @@ class HttpTaskServerTest {
                 .GET()
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(404, response.statusCode(), "Для несуществующего эпика вернулся ошибочный статус");
+        assertEquals(HTTP_NOT_FOUND, response.statusCode(), "Для несуществующего эпика вернулся ошибочный статус");
 
         request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:" + PORT + "/epicsInvalidURI/"))
@@ -183,7 +184,7 @@ class HttpTaskServerTest {
                 .GET()
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(404, response.statusCode(), "Для необрабатываемого URI вернулся неверный статус");
+        assertEquals(HTTP_NOT_FOUND, response.statusCode(), "Для необрабатываемого URI вернулся неверный статус");
 
         request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:" + PORT + "/epics/s34"))
@@ -192,7 +193,7 @@ class HttpTaskServerTest {
                 .GET()
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(404, response.statusCode(), "Для некорректного с точки зрения типа значений в uri вернулся неверный статус");
+        assertEquals(HTTP_NOT_FOUND, response.statusCode(), "Для некорректного с точки зрения типа значений в uri вернулся неверный статус");
 
         request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:" + PORT + "/epics/"))
@@ -222,7 +223,7 @@ class HttpTaskServerTest {
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(201, response.statusCode(), "Для корректного формата собщения не удалось создать задачу");
+        assertEquals(HTTP_CREATED, response.statusCode(), "Для корректного формата собщения не удалось создать задачу");
 
         JsonElement jsonElement = JsonParser.parseString(response.body());
         assertTrue(jsonElement.isJsonObject(), "В результате создания не вернулся JSON");
@@ -237,7 +238,7 @@ class HttpTaskServerTest {
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(404, response.statusCode(), "Для необрабатываемого URI вернулся ошибочный статус");
+        assertEquals(HTTP_NOT_FOUND, response.statusCode(), "Для необрабатываемого URI вернулся ошибочный статус");
 
     }
 
@@ -259,7 +260,7 @@ class HttpTaskServerTest {
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(201, response.statusCode(), "Для корректного формата собщения не удалось создать подзадачу");
+        assertEquals(HTTP_CREATED, response.statusCode(), "Для корректного формата собщения не удалось создать подзадачу");
 
         JsonElement jsonElement = JsonParser.parseString(response.body());
         assertTrue(jsonElement.isJsonObject(), "В результате создания не вернулся JSON");
@@ -274,7 +275,7 @@ class HttpTaskServerTest {
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(404, response.statusCode(), "Для необрабатываемого URI вернулся ошибочный статус");
+        assertEquals(HTTP_NOT_FOUND, response.statusCode(), "Для необрабатываемого URI вернулся ошибочный статус");
 
     }
 
@@ -296,7 +297,7 @@ class HttpTaskServerTest {
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(201, response.statusCode(), "Для корректного формата собщения не удалось создать эпик");
+        assertEquals(HTTP_CREATED, response.statusCode(), "Для корректного формата собщения не удалось создать эпик");
 
         JsonElement jsonElement = JsonParser.parseString(response.body());
         assertTrue(jsonElement.isJsonObject(), "В результате создания эпика не вернулся JSON");
@@ -311,7 +312,7 @@ class HttpTaskServerTest {
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(404, response.statusCode(), "Для необрабатываемого URI вернулся ошибочный статус");
+        assertEquals(HTTP_NOT_FOUND, response.statusCode(), "Для необрабатываемого URI вернулся ошибочный статус");
 
     }
 
@@ -328,7 +329,7 @@ class HttpTaskServerTest {
                 .DELETE()
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(201, response.statusCode(), "Некорреткный статус ответа при удалении существующей задачи");
+        assertEquals(HTTP_OK, response.statusCode(), "Некорреткный статус ответа при удалении существующей задачи");
 
         Task task = tm.getTask(taskId);
 
@@ -339,7 +340,7 @@ class HttpTaskServerTest {
                 .DELETE()
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(404, response.statusCode(), "Некорректный статус запроса при поытке удаления несуществующей задачи");
+        assertEquals(HTTP_NOT_FOUND, response.statusCode(), "Некорректный статус запроса при поытке удаления несуществующей задачи");
     }
 
     @Test
@@ -355,7 +356,7 @@ class HttpTaskServerTest {
                 .DELETE()
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(201, response.statusCode(), "Некорреткный статус ответа при удалении существующей подзадачи");
+        assertEquals(HTTP_OK, response.statusCode(), "Некорреткный статус ответа при удалении существующей подзадачи");
 
         SubTask subTask = tm.getSubTask(subTaskId);
 
@@ -366,7 +367,7 @@ class HttpTaskServerTest {
                 .DELETE()
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(404, response.statusCode(), "Некорректный статус запроса при поытке удаления несуществующей подзадачи");
+        assertEquals(HTTP_NOT_FOUND, response.statusCode(), "Некорректный статус запроса при поытке удаления несуществующей подзадачи");
     }
 
     @Test
@@ -382,7 +383,7 @@ class HttpTaskServerTest {
                 .DELETE()
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(201, response.statusCode(), "Некорреткный статус ответа при удалении существующего эпика");
+        assertEquals(HTTP_OK, response.statusCode(), "Некорреткный статус ответа при удалении существующего эпика");
 
         Epic epic = tm.getEpic(epicId);
 
@@ -393,7 +394,7 @@ class HttpTaskServerTest {
                 .DELETE()
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(404, response.statusCode(), "Некорректный статус запроса при поытке удаления несуществующей подзадачи");
+        assertEquals(HTTP_NOT_FOUND, response.statusCode(), "Некорректный статус запроса при поытке удаления несуществующей подзадачи");
     }
 }
 
