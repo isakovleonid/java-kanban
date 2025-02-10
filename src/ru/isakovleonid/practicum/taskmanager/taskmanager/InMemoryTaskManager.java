@@ -75,6 +75,7 @@ public class InMemoryTaskManager implements TaskManager {
         Task task;
         task = tasks.get(id);
 
+
         if (task != null)
             historyManager.add(task);
 
@@ -104,9 +105,24 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    public List<Epic> getEpics() {
+        return epics.values().stream().toList();
+    }
+
+    @Override
+    public List<SubTask> getSubTasks() {
+        return subTasks.values().stream().toList();
+    }
+
+    @Override
+    public List<Task> getTasks() {
+        return tasks.values().stream().toList();
+    }
+
+    @Override
     public Integer addTask(Task newTask) {
         if (existsIntersectionByPeriod(newTask))
-            return null;
+            throw new ManagerSaveException("Наличие пересечений");
 
         Integer id = newTask.getId();
         if (id == null)
@@ -138,7 +154,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Integer addSubTask(SubTask newSubTask) {
         if (existsIntersectionByPeriod(newSubTask))
-            return null;
+            throw new ManagerSaveException("Наличие пересечений");
 
         Integer id = newSubTask.getId(), epicId;
         epicId = newSubTask.getEpic();
@@ -207,6 +223,7 @@ public class InMemoryTaskManager implements TaskManager {
         return sortedTasksByStartTime.stream().toList();
     }
 
+    @Override
     public boolean existsIntersectionByPeriod(Task checkTask) {
         Task taskIntersectionInPeriod;
         taskIntersectionInPeriod = this.getPrioritizedTasks().stream()
